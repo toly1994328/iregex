@@ -134,7 +134,7 @@ class _SwitchEndDrawerState extends State<SwitchEndDrawer> {
     );
   }
 
-  final Duration fadeDuration = const Duration(milliseconds: 2000);
+  final Duration fadeDuration = const Duration(milliseconds: 200);
 
   Widget buildInput(Color themeColor, BuildContext context) {
     return Container(
