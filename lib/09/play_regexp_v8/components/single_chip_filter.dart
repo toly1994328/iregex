@@ -29,11 +29,6 @@ class _SingleChipFilterState<T> extends State<SingleChipFilter<T>> {
     _selected.clear();
     _selected.add(0);
   }
-  @override
-  void initState() {
-    super.initState();
-    _selected.add(0);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,8 +67,9 @@ class _SingleChipFilterState<T> extends State<SingleChipFilter<T>> {
       onSelected: (bool value) {
         setState(() {
           _selected.clear();
+          widget.onSelected(null);
+
           if(!value){
-            widget.onSelected(null);
           }else{
             _selected.add(index);
             widget.onSelected(widget.data[_selected.last]);

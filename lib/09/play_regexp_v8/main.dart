@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:regexp/09/play_regexp_v6/views/tool_panel.dart';
 import 'package:regexp/app/iconfont/toly_icon.dart';
 
 import 'components/single_chip_filter.dart';
@@ -8,6 +7,7 @@ import 'model/match_result.dart';
 import 'model/reg_test_item.dart';
 import 'views/match_panel.dart';
 import 'views/switch_end_drawer.dart';
+import 'views/tool_panel.dart';
 
 void main() {
   runApp(const MyApp());
@@ -50,52 +50,44 @@ class _MyHomePageState extends State<MyHomePage> {
   ValueNotifier<MatchResult> matchResult = ValueNotifier(MatchResult());
   ValueNotifier<MatchInfo?> selectMatchInfo = ValueNotifier(null);
   final TextEditingController regTextCtrl = TextEditingController();
-  late ValueNotifier<RegTestItem> selectSideItem;
+  late ValueNotifier<RegTestItem> regTestContentCtrl;
 
   @override
   void initState() {
     super.initState();
-    selectSideItem = ValueNotifier(RegTestItem.fromJson({
+    regTestContentCtrl = ValueNotifier(RegTestItem.fromJson({
       "title": "中国地域",
       "subtitle": "测试数字",
       "recommend": ["\\d", "\\d+", "(\\d+\\.\\d+)|(\\d+)"],
       "content":
           "中国陆地面积约960万平方千米，东部和南部大陆海岸线1.8万多千米，内海和边海的水域面积约470多万平方千米。海域分布有大小岛屿7600多个，其中台湾岛最大，面积35798平方千米 。中国同14国接壤，与8国海上相邻。省级行政区划为23个省、5个自治区、4个直辖市、2个特别行政区。"
     }));
-    _updateSelectSideItem();
+    _updateContent();
     _updateSpan();
-    regTextCtrl.addListener(_updateRegInput);
-    selectSideItem.addListener(_updateSelectSideItem);
-    selectMatchInfo.addListener(_updateSelectMatch);
+    regTextCtrl.addListener(_updateSpan);
+    regTestContentCtrl.addListener(_updateContent);
+    selectMatchInfo.addListener(_updateSpan);
   }
 
-  void _updateRegInput() {
-    _updateSpan();
+  void _updateSpan() {
+    inlineSpan = formSpan(regTestContentCtrl.value.content, regTextCtrl.text);
   }
 
-  void _updateSelectMatch() {
-    _updateSpan();
-  }
-
-  void _updateSpan({String debugLabel=''}) {
-    inlineSpan = formSpan(selectSideItem.value.content, regTextCtrl.text);
-  }
-
-  void _updateSelectSideItem() {
-    if (selectSideItem.value.recommend.isNotEmpty) {
-      String recommend = selectSideItem.value.recommend[0];
-      if (recommend != regTextCtrl.text) {
-        regTextCtrl.text = recommend;
-        return;
-      }
+  void _updateContent() {
+    if(matchResult.value.results.isNotEmpty){
+      selectMatchInfo.value = matchResult.value.results[0];
     }
-    _updateSpan();
+    if (regTestContentCtrl.value.recommend.isNotEmpty) {
+      regTextCtrl.text = regTestContentCtrl.value.recommend[0];
+    } else {
+      _updateSpan();
+    }
   }
 
   @override
   void dispose() {
     regTextCtrl.dispose();
-    selectSideItem.dispose();
+    regTestContentCtrl.dispose();
     matchResult.dispose(); //tag1
     super.dispose();
   }
@@ -104,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         endDrawer: SwitchEndDrawer(
-          contentTextCtrl: selectSideItem,
+          contentTextCtrl: regTestContentCtrl,
         ),
         floatingActionButton: Builder(
           builder: _buildFAB,
@@ -121,95 +113,104 @@ class _MyHomePageState extends State<MyHomePage> {
         body: Column(
           children: [
             ValueListenableBuilder<RegTestItem>(
-              valueListenable: selectSideItem,
-              builder: _buildFilter,
-            ),
+                valueListenable: regTestContentCtrl, builder: _buildFilter),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 15, right: 8, bottom: 8, top: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: buildMatchPanel(),
-                    ),
-                    Expanded(
-                      flex: 6,
-                      child: buildTextPanel(),
-                    ),
-                    // Expanded(
-                    //   flex: 3,
-                    //   child: Container(
-                    //     decoration: BoxDecoration(
-                    //         color: const Color(0xffFDFDFD),
-                    //         boxShadow: [
-                    //           //inset 0 1px 2px #ddd,0 0 5px rgba(69,122,187,.4)
-                    //           BoxShadow(
-                    //               offset: Offset(0, 1),
-                    //               color: const Color(0xffdddddd),
-                    //               blurRadius: 2)
-                    //         ],
-                    //         borderRadius: BorderRadius.circular(6)),
-                    //     padding: EdgeInsets.all(8),
-                    //     margin: EdgeInsets.only(left: 8, right: 8, bottom: 55),
-                    //     child: ValueListenableBuilder(
-                    //       valueListenable: regTextCtrl,
-                    //       builder: (_,__,___)=>ToolPanel(
-                    //         matchResult,
-                    //         onClickItem: (e) {
-                    //           selectMatchInfo.value = e;
-                    //         },
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-                  ],
+              padding: EdgeInsets.only(left: 15, right: 8, bottom: 8,top: 15),
+
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: const Color(0xffFDFDFD),
+                              boxShadow: [
+                                //inset 0 1px 2px #ddd,0 0 5px rgba(69,122,187,.4)
+                                BoxShadow(
+                                    offset: Offset(0, 1),
+                                    color: const Color(0xffdddddd),
+                                    blurRadius: 2)
+                              ],
+                              borderRadius: BorderRadius.circular(6)),
+                          padding: EdgeInsets.all(8),
+                          child: ValueListenableBuilder(
+                            valueListenable: regTextCtrl,
+                            builder: (_,__,___)=>MatchPanel(
+                              matchResult,
+                              onClickItem: (e) {
+                                selectMatchInfo.value = e;
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 6,
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: SingleChildScrollView(
+                            controller: ScrollController(),
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20.0, right: 20, top: 20),
+                              child: ValueListenableBuilder<MatchInfo?>(
+                                  valueListenable: selectMatchInfo,
+                                  builder: (_, MatchInfo? info, __) =>
+                                      ValueListenableBuilder<RegTestItem>(
+                                        valueListenable: regTestContentCtrl,
+                                        builder: (_, __, ___) {
+                                          return ValueListenableBuilder<
+                                              TextEditingValue>(
+                                            valueListenable: regTextCtrl,
+                                            builder: (_, __, ___) {
+                                              return Text.rich(inlineSpan);
+                                            },
+                                          );
+                                        },
+                                      )),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: Container(
+
+                          decoration: BoxDecoration(
+                              color: const Color(0xffFDFDFD),
+                              boxShadow: [
+                                //inset 0 1px 2px #ddd,0 0 5px rgba(69,122,187,.4)
+                                BoxShadow(
+                                    offset: Offset(0, 1),
+                                    color: const Color(0xffdddddd),
+                                    blurRadius: 2)
+                              ],
+                              borderRadius: BorderRadius.circular(6)),
+                          padding: EdgeInsets.all(8),
+                          margin: EdgeInsets.only(left: 8, right: 8, bottom: 55),
+                          child: ValueListenableBuilder(
+                            valueListenable: regTextCtrl,
+                            builder: (_,__,___)=>ToolPanel(
+                              matchResult,
+                              onClickItem: (e) {
+                                selectMatchInfo.value = e;
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ],
         ));
   }
-
-  Widget buildTextPanel() => Align(
-        alignment: Alignment.topLeft,
-        child: SingleChildScrollView(
-          controller: ScrollController(),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20.0, right: 20, top: 20),
-            child: ValueListenableBuilder<MatchResult>(
-                valueListenable: matchResult,
-                builder: (_, ___, __) =>
-                    Text.rich(inlineSpan)),
-          ),
-        ),
-      );
-
-  Widget buildMatchPanel() => Container(
-        decoration: BoxDecoration(
-            color: const Color(0xffFDFDFD),
-            boxShadow: const [
-              BoxShadow(
-                offset: Offset(0, 1),
-                color: Color(0xffdddddd),
-                blurRadius: 2,
-              )
-            ],
-            borderRadius: BorderRadius.circular(6)),
-        padding: const EdgeInsets.all(8),
-        child: ValueListenableBuilder(
-          valueListenable: regTextCtrl,
-          builder: (_, __, ___) => MatchPanel(
-            matchResult,
-            onClickItem: (e) {
-              selectMatchInfo.value = e;
-            },
-          ),
-        ),
-      );
 
   final Widget errorStateWidget = const Text(
     '规则异常',
@@ -259,7 +260,6 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<String> sList = ['\t', '\v', '\n', '\r', '\f'];
 
   InlineSpan formSpan(String src, String pattern) {
-
     if (pattern.isEmpty) {
       matchResult.value = MatchResult();
       return TextSpan(text: src);
@@ -274,22 +274,56 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     List<RegExpMatch> allMatches = regExp.allMatches(src).toList();
+    List<MatchInfo> matchInfos = [];
 
+    allMatches.asMap().forEach((i, match) {
+      String fullContent = match.group(0) ?? '';
+
+      matchInfos.add(MatchInfo(
+          content: fullContent,
+          groupNum: 0,
+          startPos: match.start,
+          endPos: match.end,
+          matchIndex: i,
+          end: match.groupCount == 0));
+
+      for (int j = 1; j <= match.groupCount; j++) {
+        String? content = match.group(j);
+        if (content != null) {
+          int start = fullContent.indexOf(content);
+          matchInfos.add(MatchInfo(
+              content: content,
+              groupNum: j,
+              startPos: match.start + start,
+              endPos: match.start + content.length,
+              matchIndex: i,
+              end: j == match.groupCount));
+        } else {
+          matchInfos.add(MatchInfo(
+              content: content,
+              groupNum: j,
+              startPos: -1,
+              endPos: -1,
+              matchIndex: i,
+              end: j == match.groupCount));
+        }
+      }
+    });
+
+    selectMatchInfo.value ??= matchInfos.first;
+    matchResult.value = MatchResult(results: matchInfos);
     if (allMatches.isEmpty) {
-      matchResult.value = MatchResult();
       return TextSpan(text: src);
     }
 
     int start = 0;
     int end = 0;
-    List<MatchInfo> matchInfos = [];
-
     for (int i = 0; i < allMatches.length; i++) {
-      RegExpMatch match = allMatches[i];
       RegExpMatch? prevMatch;
       if (i > 0) {
         prevMatch = allMatches[i - 1];
       }
+      RegExpMatch match = allMatches[i];
       start = prevMatch?.end ?? 0;
       end = match.start;
       String noMatchStr = match.input.substring(start, end);
@@ -309,14 +343,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
       late TextStyle textStyle;
       TextStyle lightBgStyle = lightTextStyle.copyWith(
-          color: colors[i % colors.length], backgroundColor: Colors.cyanAccent);
+          color: colors[i % colors.length],
+          backgroundColor: Colors.cyanAccent);
 
-      TextStyle colorStyle =
-          lightTextStyle.copyWith(color: colors[i % colors.length]);
+      TextStyle colorStyle = lightTextStyle.copyWith(color: colors[i % colors.length]);
 
-      if (selectMatchInfo.value != null) {
+      if(selectMatchInfo.value!=null){
         //选择的不是组
-        if (!selectMatchInfo.value!.isGroup) {
+        if(!selectMatchInfo.value!.isGroup){
           if (i == selectedMatch) {
             textStyle = lightBgStyle;
           } else {
@@ -326,11 +360,11 @@ class _MyHomePageState extends State<MyHomePage> {
             text: matchStr.replaceAll(" ", '␣'),
             style: textStyle,
           ));
-        } else {
+        }else{
           // 匹配的是组
-          String groupContent = selectMatchInfo.value!.content ?? '';
+          String groupContent = selectMatchInfo.value!.content??'';
           List<String> leftStr = matchStr.split(groupContent);
-          if (leftStr.length == 2 && selectedMatch == i) {
+          if(leftStr.length==2&&selectedMatch==i){
             span.add(TextSpan(
               text: leftStr[0].replaceAll(" ", '␣'),
               style: colorStyle,
@@ -345,14 +379,14 @@ class _MyHomePageState extends State<MyHomePage> {
               text: leftStr[1].replaceAll(" ", '␣'),
               style: colorStyle,
             ));
-          } else {
+          }else{
             span.add(TextSpan(
               text: matchStr.replaceAll(" ", '␣'),
               style: colorStyle,
             ));
           }
         }
-      } else {
+      }else{
         span.add(TextSpan(
           text: matchStr.replaceAll(" ", '␣'),
           style: colorStyle,
@@ -363,46 +397,8 @@ class _MyHomePageState extends State<MyHomePage> {
         String tail = match.input.substring(allMatches.last.end);
         span.add(TextSpan(text: tail));
       }
-      matchInfos.addAll(collectMatchInfo(match, i));
     }
-
-    matchResult.value = MatchResult(results: matchInfos);
     return TextSpan(children: span);
-  }
-
-  List<MatchInfo> collectMatchInfo(RegExpMatch match, int index) {
-    List<MatchInfo> result = [];
-    String fullContent = match.group(0) ?? '';
-    result.add(MatchInfo(
-        content: fullContent,
-        groupNum: 0,
-        startPos: match.start,
-        endPos: match.end,
-        matchIndex: index,
-        end: match.groupCount == 0));
-
-    for (int j = 1; j <= match.groupCount; j++) {
-      String? content = match.group(j);
-      if (content != null) {
-        int start = fullContent.indexOf(content);
-        result.add(MatchInfo(
-            content: content,
-            groupNum: j,
-            startPos: match.start + start,
-            endPos: match.start + content.length,
-            matchIndex: index,
-            end: j == match.groupCount));
-      } else {
-        result.add(MatchInfo(
-            content: content,
-            groupNum: j,
-            startPos: -1,
-            endPos: -1,
-            matchIndex: index,
-            end: j == match.groupCount));
-      }
-    }
-    return result;
   }
 
   Widget _buildFAB(BuildContext context) {
@@ -422,6 +418,9 @@ class _MyHomePageState extends State<MyHomePage> {
       regTextCtrl.text = '';
     } else {
       regTextCtrl.text = reg;
+      if(matchResult.value.results.isNotEmpty){
+        selectMatchInfo.value = matchResult.value.results[0];
+      }
     }
   }
 
@@ -435,6 +434,11 @@ class _MyHomePageState extends State<MyHomePage> {
       avatarBuilder: (_, index) =>
           CircleAvatar(child: Text((index + 1).toString())),
       labelBuilder: (_, index, selected) => Text('${value.recommend[index]}'),
+      //     Icon(
+      //   Icons.star,
+      //   color: selected ? Colors.blue : Colors.grey,
+      //   size: 18,
+      // ),
       onSelected: _doSelectStart,
     );
   }

@@ -4,6 +4,10 @@ import 'package:flutter/widgets.dart';
 class TolyIcon {
 
     TolyIcon._();
+static const IconData icon_unicode = IconData(0xe669, fontFamily: "TolyIcon");
+static const IconData icon_multiLine = IconData(0xe78c, fontFamily: "TolyIcon");
+static const IconData icon_caseSensitive = IconData(0xe60a, fontFamily: "TolyIcon");
+static const IconData icon_dot_all = IconData(0xec56, fontFamily: "TolyIcon");
 static const IconData icon_text_switch = IconData(0xe60d, fontFamily: "TolyIcon");
 static const IconData icon_input = IconData(0xe693, fontFamily: "TolyIcon");
 static const IconData icon_text = IconData(0xe678, fontFamily: "TolyIcon");

@@ -8,8 +8,9 @@ main(){
   int loopPosition = scanner.position;
   while (!scanner.isDone) {
     if(scanner.scan('这是')){
-      print(scanner.lastMatch);
+      print(scanner.lastMatch?.group(0));
     }
+
     print(scanner.position);
 
     if (loopPosition == scanner.position) {
