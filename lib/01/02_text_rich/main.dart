@@ -22,27 +22,25 @@ class MyHomePage extends StatelessWidget{
   const MyHomePage({super.key});
 
   final String src = '这是一段测试文字';
-  final TextStyle lightTextStyle = const TextStyle(color: Colors.blue,fontWeight: FontWeight.bold);
-
+  final TextStyle lightTextStyle = const TextStyle(
+    color: Colors.blue,
+    fontWeight: FontWeight.bold,
+  );
 
   @override
   Widget build(BuildContext context) {
-    String part1 = src.substring(0,4);
-    String part2 = src.substring(4,6);
-    String part3 = src.substring(6,8);
+    String part1 = src.substring(0, 4);
+    String part2 = src.substring(4, 6);
+    String part3 = src.substring(6, 8);
 
     InlineSpan inlineSpan = TextSpan(children: [
-      TextSpan(text: part1,),
+      TextSpan(text: part1),
       TextSpan(text: part2, style: lightTextStyle),
       TextSpan(text: part3),
     ]);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text.rich(inlineSpan),
-      ),
-      body: Center(
-          child: Text.rich(inlineSpan)), // This trailing comma makes auto-formatting nicer for build methods.
+      body: Center(child: Text.rich(inlineSpan)),
     );
   }
 }
