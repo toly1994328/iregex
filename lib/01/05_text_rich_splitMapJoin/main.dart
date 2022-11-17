@@ -30,8 +30,11 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+const kRenderColors = [Colors.red, Colors.green, Colors.blue];
+
 class _MyHomePageState extends State<MyHomePage> {
   String src = '中国陆地面积约960万平方千米，东部和南部大陆海岸线1.8万多千米，内海和边海的水域面积约470多万平方千米。海域分布有大小岛屿7600多个，其中台湾岛最大，面积35798平方千米 。中国同14国接壤，与8国海上相邻。省级行政区划为23个省、5个自治区、4个直辖市、2个特别行政区。';
+
   final TextStyle lightTextStyle = const TextStyle(
     color: Colors.blue,
     fontWeight: FontWeight.bold,
@@ -40,6 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     InlineSpan span = formSpan(src, r'\d');
+
     return Scaffold(
       body: Center(
           child: SizedBox(
@@ -53,18 +57,18 @@ class _MyHomePageState extends State<MyHomePage> {
   InlineSpan formSpan(String src, String pattern) {
     List<TextSpan> span = [];
     RegExp regExp = RegExp(pattern);
-    // 非匹配结果列表
-    List<String> parts = src.split(regExp);
-    if(parts.isEmpty) return TextSpan(text: src);
-    // 匹配结果列表
-    List<RegExpMatch> allMatches = regExp.allMatches(src).toList();
-    for (int i = 0; i < parts.length; i++) {
-      span.add(TextSpan(text: parts[i]));
-      if (i != parts.length - 1) {
-        String matchValue = allMatches[i].group(0)??'';
-        span.add(TextSpan(text: matchValue, style: lightTextStyle));
-      }
-    }
+    int index = 0;
+    src.splitMapJoin(regExp, onMatch: (Match match) {
+      String value = match.group(0) ?? '';
+      Color color = kRenderColors[index % kRenderColors.length];
+      TextStyle style = lightTextStyle.copyWith(color: color);
+      span.add(TextSpan(text: value, style: style));
+      index++;
+      return '';
+    }, onNonMatch: (str) {
+      span.add(TextSpan(text: str));
+      return '';
+    });
     return TextSpan(children: span);
   }
 }

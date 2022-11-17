@@ -33,14 +33,14 @@ class MyHomePage extends StatelessWidget{
     String part2 = src.substring(4, 6);
     String part3 = src.substring(6, 8);
 
-    InlineSpan inlineSpan = TextSpan(children: [
+    InlineSpan span = TextSpan(children: [
       TextSpan(text: part1),
       TextSpan(text: part2, style: lightTextStyle),
       TextSpan(text: part3),
     ]);
 
     return Scaffold(
-      body: Center(child: Text.rich(inlineSpan)),
+      body: Center(child: Text.rich(span)),
     );
   }
 }

@@ -42,27 +42,20 @@ class _MyHomePageState extends State<MyHomePage> {
     InlineSpan inlineSpan = formSpan(src, '测试');
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-          child: Text.rich(
-              inlineSpan)), // This trailing comma makes auto-formatting nicer for build methods.
+      body: Center(child: Text.rich(inlineSpan)), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
   InlineSpan formSpan(String src, String pattern) {
-    List<TextSpan> span = [];
     List<String> parts = src.split(pattern);
-    if (parts.length > 1) {
-      for (int i = 0; i < parts.length; i++) {
-        span.add(TextSpan(text: parts[i]));
-        if (i != parts.length - 1) {
-          span.add(TextSpan(text: pattern, style: lightTextStyle));
-        }
+    if(parts.isEmpty) return TextSpan(text: src);
+    List<TextSpan> span = [];
+    for (int i = 0; i < parts.length; i++) {
+      span.add(TextSpan(text: parts[i]));
+      if (i != parts.length - 1) {
+        // 插入匹配字符 [样式高亮]
+        span.add(TextSpan(text: pattern, style: lightTextStyle));
       }
-    } else {
-      span.add(TextSpan(text: src));
     }
     return TextSpan(children: span);
   }
