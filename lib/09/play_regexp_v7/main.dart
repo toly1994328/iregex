@@ -479,7 +479,6 @@ class _MyHomePageState extends State<MyHomePage> {
       spacing: 4,
       children: configInfo.asMap().keys.map((int index) {
         bool active = false;
-
         if (index == 0) {
           active = value.multiLine;
         }
