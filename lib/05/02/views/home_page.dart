@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import '../app/res/cons.dart';
 import '../app/res/gap.dart';
 
-import '../components/navigation/model/nav_tab.dart';
 import '../components/navigation/views/left_tab_navigation.dart';
 import '../parser/regex_parser.dart';
 import 'content_text_panel.dart';
@@ -49,7 +48,9 @@ class _HomePageState extends State<HomePage> {
                   onSelect: _onSelectNav,
                   items: Cons.leftNav,
                 ),
-                LeftNavContent(activeIndex:activeLeftNavId),
+                LeftNavContent(
+                  activeIndex:activeLeftNavId
+                ),
                 Expanded(
                   child: ContentTextPanel(
                     span: span,
@@ -65,7 +66,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _onSelectNav(NavTab nav) {
+  void _onSelectNav(nav) {
     if (activeLeftNavId == nav.id) {
       activeLeftNavId = 0;
     } else {
