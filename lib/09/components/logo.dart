@@ -19,8 +19,9 @@ class Logo extends StatelessWidget {
         // DbRecoderRepository repository = DbRecoderRepository();
 
         await DefaultData.insertDefaultRecoder();
+        // await DefaultData.insertLoadMoreRecoder();
         RecordBloc bloc = context.read<RecordBloc>();
-        bloc.loadRecord(refresh: false);
+        bloc.loadRecord(operation: LoadType.refresh);
         // 查
         // List<Record> result = await repository.search();
         // print(result);

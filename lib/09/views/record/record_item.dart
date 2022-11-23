@@ -24,7 +24,6 @@ class RecordItem extends StatelessWidget {
             children: [
               Text(record.title,
                   style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-
               Text(
                 record.content,
                 maxLines: 2,

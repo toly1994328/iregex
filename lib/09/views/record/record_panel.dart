@@ -46,7 +46,6 @@ class _RecordPanelState extends State<RecordPanel> with AutomaticKeepAliveClient
     );
   }
 
-
   void _selectRecord(Record record) {
     bloc.select(record.id);
   }

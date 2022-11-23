@@ -1,9 +1,9 @@
 main() {
   String src = 'I have a dream';
   RegExp exp = RegExp(r'a([vm])');
-  List<RegExpMatch> allMatches = exp.allMatches(src).toList();
+  Iterable<RegExpMatch> allMatches = exp.allMatches(src);
 
-  for (var match in allMatches) {
+  for (RegExpMatch match in allMatches) {
     print("groupCount:${match.groupCount}====match:${match.group(0)}");
   }
 }

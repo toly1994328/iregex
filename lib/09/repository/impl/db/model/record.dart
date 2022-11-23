@@ -25,7 +25,7 @@ CREATE TABLE `recoder` (
     this.id = -1,
     required this.title,
     required this.content,
-  }):timestamp = DateTime.now().millisecondsSinceEpoch;
+  }) : timestamp = DateTime.now().millisecondsSinceEpoch;
 
   factory Record.fromJson(dynamic map) {
     return Record(
@@ -33,6 +33,20 @@ CREATE TABLE `recoder` (
       title: map['title'],
       content: map["content"],
       timestamp: map["timestamp"],
+    );
+  }
+
+  Record copyWith({
+    int? id,
+    String? title,
+    String? content,
+    int? timestamp,
+  }) {
+    return Record(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      content: content ?? this.content,
+      timestamp: timestamp ?? this.timestamp,
     );
   }
 

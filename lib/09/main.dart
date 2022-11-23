@@ -10,7 +10,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await LocalDb.instance.initDb();
   runApp(const MyApp());
-  DesktopWindow.setWindowSize(const Size(720, 480));
+  DesktopWindow.setWindowSize(const Size(600, 480));
 }
 
 class MyApp extends StatelessWidget {

@@ -5,12 +5,16 @@ typedef AsyncTask = Future<bool> Function();
 
 class CustomDialogBar extends StatefulWidget {
   final String conformText;
+  final Widget? leading;
   final String title;
   final AsyncTask? onConform;
+  final Color? color;
 
   const CustomDialogBar({
     super.key,
+    this.leading,
     this.conformText = "确定",
+    this.color,
     this.title = "添加记录",
     this.onConform,
   });
@@ -23,6 +27,7 @@ class _CustomDialogBarState extends State<CustomDialogBar> {
   @override
   Widget build(BuildContext context) {
     ButtonStyle style = ElevatedButton.styleFrom(
+      backgroundColor: widget.color,
         elevation: 0, padding: EdgeInsets.zero, shape: const StadiumBorder());
 
     return Padding(
@@ -30,12 +35,17 @@ class _CustomDialogBarState extends State<CustomDialogBar> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          if(widget.leading==null)
           GestureDetector(
             onTap: () => Navigator.of(context).pop(),
             child: const Padding(
                 padding: EdgeInsets.only(right: 20),
                 child: Icon(Icons.close, size: 20)),
           ),
+          if(widget.leading!=null)
+             Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: widget.leading),
           // ElevatedButton(onPressed: (){}, child: Text("取消")),
           Text(
             widget.title,

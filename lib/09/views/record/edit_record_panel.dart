@@ -28,8 +28,15 @@ class _EditRecordPanelState extends State<EditRecordPanel> {
   @override
   void initState() {
     super.initState();
-    contentCtrl.text = widget.model?.title ?? '';
-    titleCtrl.text = widget.model?.content ?? '';
+    contentCtrl.text = widget.model?.content ?? '';
+    titleCtrl.text = widget.model?.title ?? '';
+  }
+
+  @override
+  void dispose() {
+    contentCtrl.dispose();
+    titleCtrl.dispose();
+    super.dispose();
   }
 
   @override
@@ -37,7 +44,7 @@ class _EditRecordPanelState extends State<EditRecordPanel> {
     return Column(
       children: <Widget>[
         CustomDialogBar(
-          title: "添加记录",
+          title: widget.model == null ? "添加记录" : "修改记录",
           conformText: "确定",
           onConform: _onConform,
         ),
@@ -66,17 +73,30 @@ class _EditRecordPanelState extends State<EditRecordPanel> {
   Future<bool> _onConform() async {
     if (!checkAllow()) return false;
     RecordBloc bloc = context.read<RecordBloc>();
+    int result = -1;
+    LoadType operation ;
     if (widget.model == null) {
       // 说明是添加
-      int result = await bloc.repository.insert(Record.i(
+      operation = LoadType.add;
+      result = await bloc.repository.insert(Record.i(
         title: titleCtrl.text,
         content: contentCtrl.text,
       ));
-      if (result > 0) {
-        bloc.loadRecord(refresh: true);
-      } else {
-        return false;
-      }
+
+    } else {
+      // 说明是修改
+      operation = LoadType.edit;
+      result = await bloc.repository.update(
+        widget.model!.copyWith(
+          title: titleCtrl.text,
+          content: contentCtrl.text,
+        ),
+      );
+    }
+    if (result > 0) {
+      bloc.loadRecord(operation: operation);
+    } else {
+      return false;
     }
     return true;
   }
