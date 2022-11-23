@@ -14,6 +14,7 @@ void main() async{
   for (RegExpMatch match in allMatches) {
     urls.add(match.group(1));
   }
+
   print(urls);
 
   String fileName = path.basenameWithoutExtension(srcPath);

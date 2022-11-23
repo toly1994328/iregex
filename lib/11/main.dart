@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'repository/impl/db/local_db.dart';
 import 'views/home_page.dart';
+import 'views/match/bloc/bloc.dart';
 import 'views/record/bloc/record_bloc.dart';
 
 void main() async {
@@ -11,6 +12,7 @@ void main() async {
   await LocalDb.instance.initDb();
   runApp(const MyApp());
   DesktopWindow.setWindowSize(const Size(720, 480));
+
 }
 
 class MyApp extends StatelessWidget {
@@ -20,13 +22,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<RecordBloc>(
       create: (_) => RecordBloc(),
-      child: MaterialApp(
-        title: 'regexpo',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
+      child: BlocProvider<MatchBloc>(
+        create: (_) => MatchBloc(),
+        child: MaterialApp(
+          title: 'regexpo',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          home: const HomePage(),
         ),
-        home:  const HomePage(),
       ),
     );
   }
