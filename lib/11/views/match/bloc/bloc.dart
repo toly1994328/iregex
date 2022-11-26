@@ -15,7 +15,7 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
     on<HoverMatchRegex>(_onHoverMatchRegex);
   }
 
-  void _onChangeRegex(ChangeRegex event, Emitter<MatchState> emit) async {
+  void _onChangeRegex(ChangeRegex event, Emitter<MatchState> emit){
     MatchState match = parser.match(
       state.content,
       event.pattern,
@@ -34,8 +34,7 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
     emit(match);
   }
 
-  FutureOr<void> _onChangeContent(
-      ChangeContent event, Emitter<MatchState> emit) {
+  void _onChangeContent(ChangeContent event, Emitter<MatchState> emit) {
     MatchState match = parser.match(
       event.content,
       state.pattern,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ErrorPanel extends StatelessWidget {
   final String data;
-  final String error;
+  final String? error;
   final IconData icon;
   final VoidCallback? onRefresh;
 
@@ -10,7 +10,7 @@ class ErrorPanel extends StatelessWidget {
     super.key,
     required this.data,
     required this.icon,
-    required this.error,
+    this.error,
      this.onRefresh,
   });
 
@@ -36,6 +36,7 @@ class ErrorPanel extends StatelessWidget {
               ),
               onPressed: onRefresh, child: Text("刷新重试",style: TextStyle(fontSize: 12),)),
           Spacer(),
+          if(error!=null)
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text("异常信息:\n$error",

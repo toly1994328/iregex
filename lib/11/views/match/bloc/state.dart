@@ -31,9 +31,9 @@ class MatchSuccess extends MatchState {
   final int matchTime;
   final InlineSpan span;
 
-  int get matchCount => results.where((element) => !element.isGroup).length;
+  int get matchCount => results.where((e) => !e.isGroup).length;
 
-  int get groupCount => results.where((element) => element.isGroup).length;
+  int get groupCount => results.where((e) => e.isGroup).length;
 
   const MatchSuccess({
     this.results = const [],

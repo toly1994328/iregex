@@ -99,7 +99,6 @@ class _HomePageState extends State<HomePage> {
       context.read<MatchBloc>().add(ChangeContent(content: content));
     }
     if(state is EmptyRecordState){
-      // src = 'hello flutter regexpo';
       context.read<MatchBloc>().add(const ChangeContent(content: ""));
     }
   }

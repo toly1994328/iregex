@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:regexp/11/components/custom/error_panel.dart';
+import 'package:regexp/app/iconfont/toly_icon.dart';
 
 
 import '../../../app/res/gap.dart';
@@ -39,33 +41,40 @@ class MatchPanel extends StatelessWidget{
                 return MatchListView(
                   s.results,
                   onSelectItem: (MatchInfo? info) {
-                    selectMatchInfo(context,info);
+                    _onSelectItem(context,info);
                   },
                 );
               }
-              return const Center(child: Text('匹配异常',style: TextStyle(color: Colors.red),));
+              return const ErrorPanel(
+                data: "正则规则异常",
+                icon: TolyIcon.zanwushuju,
+                // onRefresh: bloc.loadRecord,
+              );
             },
           ),
         ),
       ],
     );
   }
+  Widget buildPanel(BuildContext context){
+    return BlocBuilder<MatchBloc, MatchState>(
+      builder: (_, state) {
+        if (state is MatchSuccess) {
+          return MatchListView(
+            state.results,
+            onSelectItem: (MatchInfo? info) => _onSelectItem(context,info),
+          );
+        }
+        return const ErrorPanel(
+          data: "正则规则异常",
+          icon: TolyIcon.zanwushuju,
+        );
+      },
+    );
+  }
 
-  void selectMatchInfo(BuildContext context,MatchInfo? info){
-    if(info!=null){
-      context.read<MatchBloc>().add(HoverMatchRegex(matchInfo: info));
-    }
-
-
-    // int tabId = BlocProvider.of<SelectionCubit>(context)
-    //     .state
-    //     .activeTabId;
-    // String regex =
-    //     BlocProvider.of<SelectionCubit>(context).state.regex;
-    // MatchBloc matchBloc = BlocProvider.of<MatchBloc>(context);
-    //   matchBloc.add(MatchRegex(
-    //       regex: regex,
-    //       selectMatch: info));
+  void _onSelectItem(BuildContext context,MatchInfo? info){
+    context.read<MatchBloc>().add(HoverMatchRegex(matchInfo: info));
   }
 }
 

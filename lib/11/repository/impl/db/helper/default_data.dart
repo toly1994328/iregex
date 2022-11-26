@@ -12,7 +12,7 @@ class DefaultData {
     List<dynamic> data = json.decode(dataStr).reversed.toList();
     List<Record> records = [];
     for (int i = 0; i < data.length; i++) {
-      await Future.delayed(Duration(milliseconds: 2));
+      await Future.delayed(Duration(milliseconds: 1));
       records
           .add(Record.i(title: data[i]['title'], content: data[i]['content']));
     }

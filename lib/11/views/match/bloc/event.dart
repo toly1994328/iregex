@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../model/match_info.dart';
+import '../model/regexp_config.dart';
 
 abstract class MatchEvent extends Equatable {
   const MatchEvent();
@@ -11,23 +12,24 @@ abstract class MatchEvent extends Equatable {
 
 class ChangeRegex extends MatchEvent {
   final String pattern;
-  const ChangeRegex({
-    required this.pattern,
-  });
+  const ChangeRegex({required this.pattern});
 }
 
 class ChangeContent extends MatchEvent{
   final String content;
-  const ChangeContent({
-    required this.content,
-  });
+
+  const ChangeContent({required this.content});
 }
 
 
 class HoverMatchRegex extends MatchEvent {
-  final MatchInfo matchInfo;
+  final MatchInfo? matchInfo;
 
-  const HoverMatchRegex({
-    required this.matchInfo,
-  });
+  const HoverMatchRegex({required this.matchInfo});
+}
+
+class UpdateRegexConfig extends MatchEvent {
+  final RegExpConfig config;
+
+  const UpdateRegexConfig({required this.config});
 }

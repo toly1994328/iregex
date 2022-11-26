@@ -5,27 +5,24 @@ import '../views/match/model/match_info.dart';
 import '../views/match/model/regexp_config.dart';
 
 const kRenderColors = [Colors.red, Colors.green, Colors.blue];
+const Map<String, String> ksListMap = {
+  '\t': 't',
+  '\v': 'v',
+  '\n': 'n',
+  '\r': 'r',
+  '\f': 'f',
+};
 
 class RegexParser {
-  
   final TextStyle lightTextStyle = const TextStyle(
     color: Colors.blue,
     fontWeight: FontWeight.bold,
   );
 
-  final Map<String, String> sListMap = const {
-    '\t': 't',
-    '\v': 'v',
-    '\n': 'n',
-    '\r': 'r',
-    '\f': 'f',
-  };
-
   MatchState match(
     String content,
     String pattern,
-    RegExpConfig config,
-      {
+    RegExpConfig config, {
     MatchInfo? activeMatch,
   }) {
     if (pattern.isEmpty || content.isEmpty) {
@@ -90,7 +87,6 @@ class RegexParser {
   List<MatchInfo> _collectMatchInfo(Match match, int index) {
     List<MatchInfo> result = [];
     String fullContent = match.group(0) ?? '';
-
     result.add(MatchInfo(
         content: fullContent,
         groupNum: 0,
@@ -122,17 +118,50 @@ class RegexParser {
     return result;
   }
 
-  //《(.*?)》
+  // 处理高亮文本样式
   TextSpan _handleHeightStyle(String value, index, {MatchInfo? active}) {
+    Color color = kRenderColors[index % kRenderColors.length];
+    TextStyle style = lightTextStyle.copyWith(color: color);
+    TextSpan? hoverSpan = _handleHoverHeightStyle(value, index, active: active);
+    if (hoverSpan != null) return hoverSpan;
+    if (value.isEmpty) {
+      TextStyle emptyStyle =
+          style.copyWith(backgroundColor: color.withOpacity(0.6));
+      return TextSpan(text: '_', style: emptyStyle);
+      // span.add(WidgetSpan(
+      //     alignment: PlaceholderAlignment.middle,
+      //     child: FlutterLogo(size: 12,)));
+    } else if (ksListMap.keys.contains(value)) {
+      TextStyle emptyStyle = style.copyWith(
+        color: Colors.white,
+        backgroundColor: color.withOpacity(0.6),
+      );
+      return TextSpan(
+        text: ksListMap[value]! + value,
+        style: emptyStyle,
+      );
+    } else if (value.contains(" ")) {
+      return TextSpan(text: value.replaceAll(" ", '␣'), style: style);
+    } else {
+      return TextSpan(text: value, style: style);
+    }
+  }
+
+  TextSpan? _handleHoverHeightStyle(
+    String value,
+    int index, {
+    MatchInfo? active,
+  }) {
     Color color = kRenderColors[index % kRenderColors.length];
     Color bgColor = Colors.orange.withOpacity(0.2);
     TextStyle style = lightTextStyle.copyWith(color: color);
-    TextStyle bgStyle = style.copyWith(backgroundColor: bgColor );
+    TextStyle bgStyle = style.copyWith(backgroundColor: bgColor);
     if (active != null) {
       if (!active.isGroup) {
         if (active.matchIndex == index) {
           style = bgStyle;
         }
+        return TextSpan(text: value, style: style);
       } else {
         String groupContent = active.content ?? '';
         List<String> leftStr = value.split(groupContent);
@@ -147,27 +176,6 @@ class RegexParser {
         }
       }
     }
-
-    if (value.isEmpty) {
-      TextStyle emptyStyle =
-          style.copyWith(backgroundColor: color.withOpacity(0.6));
-      return TextSpan(text: '_', style: emptyStyle);
-      // span.add(WidgetSpan(
-      //     alignment: PlaceholderAlignment.middle,
-      //     child: FlutterLogo(size: 12,)));
-    } else if (sListMap.keys.contains(value)) {
-      TextStyle emptyStyle = style.copyWith(
-        color: Colors.white,
-        backgroundColor: color.withOpacity(0.6),
-      );
-      return TextSpan(
-        text: sListMap[value]! + value,
-        style: emptyStyle,
-      );
-    } else if (value.contains(" ")) {
-      return TextSpan(text: value.replaceAll(" ", '␣'), style: style);
-    } else {
-      return TextSpan(text: value, style: style);
-    }
+    return null;
   }
 }
