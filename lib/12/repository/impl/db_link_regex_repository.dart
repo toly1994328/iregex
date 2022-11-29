@@ -1,9 +1,7 @@
+import '../link_regex_repository.dart';
 import 'db/dao/link_regex_dao.dart';
 import 'db/local_db.dart';
 import 'db/model/link_regex.dart';
-
-
-import '../link_regex_repository.dart';
 
 class DbLinkRegexRepository implements LinkRegexRepository{
   const DbLinkRegexRepository();
@@ -24,5 +22,4 @@ class DbLinkRegexRepository implements LinkRegexRepository{
 
   @override
   Future<int> update(LinkRegex record)  => dao.update(record);
-
 }

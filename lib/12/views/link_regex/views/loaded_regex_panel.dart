@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../components/single_filter/rrect_check.dart';
-import '../../../components/single_filter/single_filter.dart';
 import '../../../repository/impl/db/model/link_regex.dart';
 import '../bloc/link_regex_bloc.dart';
 import '../bloc/link_regex_state.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoadedRegexPanel extends StatelessWidget {
   final LoadedLinkRegexState state;
@@ -28,10 +27,11 @@ class LoadedRegexPanel extends StatelessWidget {
                 inActiveColor: const Color(0xffB0B0B0),
                 active: selected,
               ),
-              const SizedBox(
-                width: 8,
-              ),
-              Flexible(child: Text(regex.regex))
+              const SizedBox(width: 8),
+              Flexible(child: Text(regex.regex,
+                softWrap: false,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(height: 1),))
             ],
           ),
         );
@@ -42,7 +42,6 @@ class LoadedRegexPanel extends StatelessWidget {
   void _onSelect(BuildContext context,LinkRegex regex) {
     if(regex.id == state.activeLinkRegexId){
       context.read<LinkRegexBloc>().select(-1);
-
     }else{
       context.read<LinkRegexBloc>().select(regex.id);
     }

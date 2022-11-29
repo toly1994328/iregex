@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:regexp/app/iconfont/toly_icon.dart';
-
+import 'package:regexp/src/app/iconfont/toly_icon.dart';
 import '../../components/navigation/model/nav_tab.dart';
 
 

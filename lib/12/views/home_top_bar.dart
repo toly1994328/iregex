@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:regexp/app/iconfont/toly_icon.dart';
+import 'package:regexp/src/app/iconfont/toly_icon.dart';
 
 import '../components/logo.dart';
 import '../repository/impl/db/model/link_regex.dart';
@@ -13,10 +13,12 @@ import 'link_regex/bloc/link_regex_state.dart';
 class HomeTopBar extends StatelessWidget {
   final ValueChanged<String> onRegexChange;
   final ValueChanged<File> onFileSelect;
+  final VoidCallback onSaveLinkRegx;
 
   const HomeTopBar({
     Key? key,
     required this.onRegexChange,
+    required this.onSaveLinkRegx,
     required this.onFileSelect,
   }) : super(key: key);
 
@@ -33,11 +35,23 @@ class HomeTopBar extends StatelessWidget {
             child: const Icon(TolyIcon.icon_file, size: 22),
           ),
         ),
-        Expanded(child: RegexInput(
+        Expanded(
+            child: RegexInput(
           onRegexChange: onRegexChange,
         )),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8.0),
+          child: GestureDetector(
+            onTap: onSaveLinkRegx,
+            child: const Icon(
+              TolyIcon.save,
+              size: 24,
+              color: Color(0xff59A869),
+            ),
+          ),
+        ),
         const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          padding: EdgeInsets.only(right: 20, left: 10),
           child: Logo(),
         ),
       ]),
@@ -54,7 +68,6 @@ class HomeTopBar extends StatelessWidget {
     }
   }
 
-  // Widget _buildRegexInput() => ;
 }
 
 class RegexInput extends StatefulWidget {
@@ -72,7 +85,7 @@ class _RegexInputState extends State<RegexInput> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<LinkRegexBloc,LinkRegexState>(
-      listener: _listenLinkRegexChage,
+      listener: _listenLinkRegexChange,
       child: SizedBox(
         height: 28,
         child: TextField(
@@ -97,20 +110,23 @@ class _RegexInputState extends State<RegexInput> {
     );
   }
 
-  void _listenLinkRegexChage(BuildContext context, LinkRegexState state) {
-    LinkRegex?  regex = state.activeRegex;
-
-    if(regex!=null){
-      _ctrl.text = regex.regex;
-    }else{
-      _ctrl.text = '';
+  void _listenLinkRegexChange(BuildContext context, LinkRegexState state) {
+    if (state is LoadedLinkRegexState) {
+      LinkRegex? regex = state.activeRegex;
+      if (regex != null) {
+        if (regex.id == -1) {
+          _ctrl.text = '';
+        } else {
+          _ctrl.text = regex.regex;
+        }
+      }
+      widget.onRegexChange(_ctrl.text);
     }
+  }
 
-    widget.onRegexChange(_ctrl.text);
-    // if(state is LoadedLinkRegexState){
-    //
-    // }else{
-    //   _ctrl.text = '';
-    // }
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
   }
 }

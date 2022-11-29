@@ -19,8 +19,10 @@ class LinkRegexBloc extends Cubit<LinkRegexState> {
   }) async {
     LinkRegexState state;
     emit(const LoadingLinkRegexState());
+    // await Future.delayed(const Duration(milliseconds: 500));
     List<LinkRegex> results = [];
     try {
+      // throw Exception("故意抛出异常");
       results = await repository.queryLinkRegexByRecordId(
           recordId: recordId
       );

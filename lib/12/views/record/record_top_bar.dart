@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../components/indicator/refresh_indicator_icon.dart';
 import '../../repository/impl/db/model/record.dart';
-import '../../../app/iconfont/toly_icon.dart';
+import 'package:regexp/src/app/iconfont/toly_icon.dart';
 import 'bloc/record_bloc.dart';
 import 'delete_record_panel.dart';
 import 'edit_record_panel.dart';

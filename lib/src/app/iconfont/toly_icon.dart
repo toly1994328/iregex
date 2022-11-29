@@ -4,6 +4,9 @@ import 'package:flutter/widgets.dart';
 class TolyIcon {
 
     TolyIcon._();
+static const IconData save = IconData(0xe6ea, fontFamily: "TolyIcon");
+static const IconData dark = IconData(0xe72f, fontFamily: "TolyIcon");
+static const IconData wb_sunny = IconData(0xe746, fontFamily: "TolyIcon");
 static const IconData icon_regex = IconData(0xe739, fontFamily: "TolyIcon");
 static const IconData icon_edit = IconData(0xe62c, fontFamily: "TolyIcon");
 static const IconData icon_delete = IconData(0xe60f, fontFamily: "TolyIcon");

@@ -7,7 +7,7 @@ abstract class LinkRegexState extends Equatable {
   LinkRegex? get activeRegex {
     LinkRegexState state = this;
     if (state is LoadedLinkRegexState) {
-      if(state.activeLinkRegexId==-1) return null;
+      if(state.activeLinkRegexId==-1) return LinkRegex.i(regex: '', recordId: -1);
       return state.activeLinkRegex;
     }
     return null;
@@ -51,16 +51,6 @@ class LoadedLinkRegexState extends LinkRegexState {
   });
 
   LinkRegex get activeLinkRegex => regexes.singleWhere((e) => e.id == activeLinkRegexId);
-
-  int get nextActiveId {
-    int targetIndex = regexes.indexOf(activeLinkRegex);
-    if(targetIndex==regexes.length-1){
-      // 说明是最后一个，取前一个为激活索引
-      return targetIndex - 1;
-    }
-    // 说明在中间，取下一个元素索引
-    return targetIndex + 1;
-  }
 
   @override
   List<Object?> get props => [activeLinkRegexId, regexes];

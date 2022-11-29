@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:regexp/12/components/navigation/model/nav_tab.dart';
 
 import '../app/res/cons.dart';
 import '../app/res/gap.dart';
+import '../components/navigation/model/nav_tab.dart';
 import '../components/navigation/views/left_tab_navigation.dart';
+import '../repository/impl/db/model/link_regex.dart';
+import '../repository/impl/db/model/record.dart';
 import '../views/record/bloc/record_bloc.dart';
 import '../views/record/bloc/record_state.dart';
 import 'content_text_panel.dart';
@@ -49,11 +51,13 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<RecordBloc, RecordState>(
+      listenWhen: (p, n) => p.activeRecord?.id != n.activeRecord?.id,
       listener: _listenRecordState,
       child: Scaffold(
         body: Column(
           children: [
             HomeTopBar(
+              onSaveLinkRegx: _onSaveLinkRegex,
               onRegexChange: _onRegexChange,
               onFileSelect: _onFileSelect,
             ),
@@ -127,15 +131,30 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _listenRecordState(BuildContext context, RecordState state) {
+    print("=======_listenRecordState=${state.runtimeType}===========");
+    LinkRegexBloc linkRegexBloc = context.read<LinkRegexBloc>();
+    MatchBloc matchBloc = context.read<MatchBloc>();
     if (state is LoadedRecordState) {
-      context
-          .read<LinkRegexBloc>()
-          .loadLinkRegex(recordId: state.activeRecordId);
+      linkRegexBloc.loadLinkRegex(recordId: state.activeRecordId);
       String content = state.activeRecord.content;
-      context.read<MatchBloc>().add(ChangeContent(content: content));
+      matchBloc.add(ChangeContent(content: content));
     }
     if (state is EmptyRecordState) {
-      context.read<MatchBloc>().add(const ChangeContent(content: ""));
+      linkRegexBloc.loadLinkRegex(recordId: -1);
+      matchBloc.add(const ChangeContent(content: ""));
+    }
+  }
+
+  void _onSaveLinkRegex() async {
+    String regex = context.read<MatchBloc>().state.pattern;
+    Record? record = context.read<RecordBloc>().state.activeRecord;
+    LinkRegexBloc linkRegexBloc = context.read<LinkRegexBloc>();
+    if (record != null) {
+      await linkRegexBloc.repository.insert(LinkRegex.i(
+        recordId: record.id,
+        regex: regex,
+      ));
+      linkRegexBloc.loadLinkRegex(recordId: record.id);
     }
   }
 }

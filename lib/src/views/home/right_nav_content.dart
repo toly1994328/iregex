@@ -1,0 +1,76 @@
+import 'package:flutter/material.dart';
+import '../../app/res/cons.dart';
+import '../link_regex/link_regex_panel.dart';
+import 'tool_panel.dart';
+
+class RightNavContent extends StatefulWidget {
+  final int activeIndex;
+  final PageController controller;
+
+  const RightNavContent({
+    Key? key,
+    this.activeIndex = 0,
+    required this.controller,
+  }) : super(key: key);
+
+  @override
+  State<RightNavContent> createState() => _RightNavContentState();
+}
+
+class _RightNavContentState extends State<RightNavContent> {
+  String get name {
+    if(widget.activeIndex==0){
+      return "";
+    }
+    return Cons.navTabs.firstWhere((e) => e.id == widget.activeIndex).name;
+  }
+
+  double _width = 180;
+
+  @override
+  void initState() {
+    print("======_LeftNavContentState#initState========");
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        if (widget.activeIndex != 0)
+          MouseRegion(
+            cursor: SystemMouseCursors.resizeColumn,
+            child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onPanUpdate: _changeWidth,
+                child:
+                const VerticalDivider(width: 2, color: Color(0xffD1D1D1))),
+          ),
+        Container(
+          alignment: Alignment.center,
+          width: widget.activeIndex == 0 ? 0 : _width,
+          color: Colors.white,
+          child: _buildPageView(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPageView() {
+    return PageView(
+      controller: widget.controller,
+      children: [
+        LinkRegexPanel(),
+        // Center(child: Text("Link Regex")),
+        ToolPanel(),
+        Center(child: Text("Help Me")),
+      ],
+    );
+  }
+
+  void _changeWidth(DragUpdateDetails details) {
+    setState(() {
+      _width -= details.delta.dx;
+    });
+  }
+}

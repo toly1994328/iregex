@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:desktop_window/desktop_window.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:regexp/app/iconfont/toly_icon.dart';
+import 'package:regexp/src/app/iconfont/toly_icon.dart';
 
 void main() {
   runApp(const MyApp());

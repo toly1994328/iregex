@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:regexp/app/iconfont/toly_icon.dart';
+import 'package:regexp/src/app/iconfont/toly_icon.dart';
 
 import '../components/logo.dart';
 

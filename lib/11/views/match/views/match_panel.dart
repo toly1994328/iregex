@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:regexp/11/components/custom/error_panel.dart';
-import 'package:regexp/app/iconfont/toly_icon.dart';
-
+import '../../../components/custom/error_panel.dart';
+import 'package:regexp/src/app/iconfont/toly_icon.dart';
 import '../../../app/res/gap.dart';
 import '../bloc/bloc.dart';
 import '../bloc/event.dart';

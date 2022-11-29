@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../app/iconfont/toly_icon.dart';
+import 'package:regexp/src/app/iconfont/toly_icon.dart';
 import '../../../repository/impl/db/model/link_regex.dart';
 import '../bloc/link_regex_bloc.dart';
 import 'delete_regex_panel.dart';
@@ -9,8 +9,8 @@ import 'edit_recommend_panel.dart';
 // import 'delete_record_panel.dart';
 // import 'edit_record_panel.dart';
 
-class RecommendTopBar extends StatelessWidget {
-  const RecommendTopBar({super.key});
+class LinkRegexTopBar extends StatelessWidget {
+  const LinkRegexTopBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class RecommendTopBar extends StatelessWidget {
       child: Row(
         children: [
           const Text(
-            '推荐正则表达式',
+            '关联正则表达式',
             style: TextStyle(fontSize: 11),
           ),
           const Spacer(),

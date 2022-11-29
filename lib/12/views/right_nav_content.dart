@@ -8,6 +8,7 @@ import '../repository/impl/db/model/record.dart';
 import 'link_regex/views/link_regex_panel.dart';
 import 'match/views/match_panel.dart';
 import 'record/record_panel.dart';
+import 'tool_panel.dart';
 
 class RightNavContent extends StatefulWidget {
   final int activeIndex;
@@ -66,9 +67,9 @@ class _RightNavContentState extends State<RightNavContent> {
     return PageView(
       controller: widget.controller,
       children: [
-        // RecommendPanel(),
-        Center(child: Text("Link Regex")),
-        Center(child: Text("NoteBook")),
+        LinkRegexPanel(),
+        // Center(child: Text("Link Regex")),
+        ToolPanel(),
         Center(child: Text("Help Me")),
       ],
     );
