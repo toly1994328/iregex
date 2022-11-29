@@ -13,11 +13,12 @@ class RecordTopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color? color = Theme.of(context).backgroundColor;
     return Container(
-      height: 25,
+      height: 26,
       padding: const EdgeInsets.only(left: 8, right: 4),
       alignment: Alignment.centerLeft,
-      color: const Color(0xffF3F3F3),
+      color: color,
       child: Row(
         children: [
           const Text(

@@ -9,6 +9,7 @@ class ContentTextPanel extends StatelessWidget {
   const ContentTextPanel({super.key});
   @override
   Widget build(BuildContext context) {
+
     return Align(
       alignment: Alignment.topLeft,
       child: Padding(
@@ -18,7 +19,7 @@ class ContentTextPanel extends StatelessWidget {
             if(state.content.isEmpty){
               return const EmptyContent();
             }
-            return Text.rich(state.inlineSpan);
+            return Text.rich(state.inlineSpan,style:   Theme.of(context).textTheme.displayMedium,);
           },
         ),
       ),

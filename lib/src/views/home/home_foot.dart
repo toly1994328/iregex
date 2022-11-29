@@ -9,10 +9,12 @@ class FootBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color? color = Theme.of(context).backgroundColor;
+
     return Container(
       height: 20,
       padding: EdgeInsets.symmetric(horizontal: 20),
-      color: const Color(0xffF2F2F2),
+      color: color,
       child: Row(
         children: const[
           RegexConfigTools(),

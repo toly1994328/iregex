@@ -11,23 +11,30 @@ class RecordItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    NavigationRailThemeData data = Theme.of(context).navigationRailTheme;
+
+    Color? color = data.backgroundColor;
+    Color? activeColor = Theme.of(context).highlightColor;
+    TextStyle? title = active?data.selectedLabelTextStyle:data.unselectedLabelTextStyle;
     return GestureDetector(
       onTap: onTap,
       child: Container(
           color: active
-              ? Theme.of(context).primaryColor.withOpacity(0.1)
-              : Colors.white,
+              ? activeColor
+              : color,
           padding: const EdgeInsets.only(left: 15, right: 15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(record.title,
-                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+              Text(record.title,style: title),
               Text(
                 record.content,
                 maxLines: 2,
-                style: const TextStyle(fontSize: 12, color: Color(0xffCECBCD)),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey
+                ),
                 overflow: TextOverflow.ellipsis,
               ),
             ],

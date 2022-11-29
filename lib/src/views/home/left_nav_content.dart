@@ -35,12 +35,15 @@ class _LeftNavContentState extends State<LeftNavContent> {
 
   @override
   Widget build(BuildContext context) {
+    NavigationRailThemeData data = Theme.of(context).navigationRailTheme;
+
+    Color? color = data.backgroundColor;
     return Row(
       children: [
         Container(
           alignment: Alignment.center,
           width: widget.activeIndex == 0 ? 0 : _width,
-          color: Colors.white,
+          color: color,
           child: _buildPageView(),
         ),
         if (widget.activeIndex != 0)
@@ -50,7 +53,7 @@ class _LeftNavContentState extends State<LeftNavContent> {
                 behavior: HitTestBehavior.opaque,
                 onPanUpdate: _changeWidth,
                 child:
-                    const VerticalDivider(width: 2, color: Color(0xffD1D1D1))),
+                    const VerticalDivider(width: 2)),
           ),
       ],
     );

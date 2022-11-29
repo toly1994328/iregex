@@ -22,12 +22,21 @@ class NavTabItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool right = textDirection !=null&&textDirection==TextDirection.rtl;
-    int quarterTurns = right?1:3;
-    int iconQuarterTurns = right?3:1;
-    Color? itemColor = active ? const Color(0xffBDBDBD) : null;
-    const Color iconColor = Color(0xff6E6E6E);
-    const TextStyle style = TextStyle(height: 1, fontSize: 11);
+    bool right = textDirection != null && textDirection == TextDirection.rtl;
+
+
+    int quarterTurns = right ? 1 : 3;
+    int iconQuarterTurns = right ? 3 : 1;
+
+    NavigationRailThemeData data = Theme.of(context).navigationRailTheme;
+    Color? color = data.selectedIconTheme?.color;
+    Color? iconColor = data.indicatorColor;
+    Color? itemColor = active ? color : null;
+    Color? textColor = active
+        ? data.selectedLabelTextStyle?.color
+        : data.unselectedLabelTextStyle?.color;
+
+    TextStyle style = TextStyle(height: 1, fontSize: 11, color: textColor);
     const EdgeInsets padding = EdgeInsets.only(left: 8, right: 8);
 
     return GestureDetector(

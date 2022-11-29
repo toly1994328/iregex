@@ -7,6 +7,7 @@ class EmptyPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     Color color = const Color(0xffBCBCBC);
     return Center(
       child: Wrap(

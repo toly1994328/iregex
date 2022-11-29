@@ -35,6 +35,8 @@ class _RightNavContentState extends State<RightNavContent> {
 
   @override
   Widget build(BuildContext context) {
+    Color? color = Theme.of(context).navigationRailTheme.backgroundColor;
+
     return Row(
       children: [
         if (widget.activeIndex != 0)
@@ -44,12 +46,12 @@ class _RightNavContentState extends State<RightNavContent> {
                 behavior: HitTestBehavior.opaque,
                 onPanUpdate: _changeWidth,
                 child:
-                const VerticalDivider(width: 2, color: Color(0xffD1D1D1))),
+                const VerticalDivider(width: 2)),
           ),
         Container(
           alignment: Alignment.center,
           width: widget.activeIndex == 0 ? 0 : _width,
-          color: Colors.white,
+          color: color,
           child: _buildPageView(),
         ),
       ],

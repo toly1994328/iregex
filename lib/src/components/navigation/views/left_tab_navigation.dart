@@ -24,11 +24,13 @@ class RailTabNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData data = Theme.of(context);
+    Color color = data.backgroundColor;
     return Row(
       textDirection: textDirection,
       children: [
         Container(
-          color: const Color(0xffF2F2F2),
+          color: color,
           width: width,
           child: Column(
             children: [
@@ -38,7 +40,7 @@ class RailTabNavigation extends StatelessWidget {
             ],
           ),
         ),
-        const VerticalDivider(width: 1, color: Color(0xffD1D1D1)),
+        const VerticalDivider(width: 1, thickness: 1),
       ],
     );
   }

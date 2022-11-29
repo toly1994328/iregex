@@ -47,12 +47,13 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     Brightness brightness = Theme.of(context).brightness;
     bool isDark = brightness ==Brightness.dark;
-    Color bgColor = isDark?Colors.redAccent:Colors.white;
+    Color dividerColor = isDark ? Color(0xff323232) : Color(0xffD1D1D1);
+    // Color bgColor = isDark?Colors.redAccent:Colors.white;
     return BlocListener<RecordBloc, RecordState>(
       listenWhen: (p, n) => p.activeRecord?.id != n.activeRecord?.id,
       listener: _listenRecordState,
       child: Scaffold(
-        backgroundColor: bgColor,
+        // backgroundColor: bgColor,
         body: Column(
           children: [
             HomeTopBar(
@@ -60,7 +61,7 @@ class _HomePageState extends State<HomePage> {
               onRegexChange: _onRegexChange,
               onFileSelect: _onFileSelect,
             ),
-            Gap.dividerH,
+            Divider(height: 1, color: dividerColor),
             Expanded(
               child: Row(
                 children: [
@@ -91,7 +92,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            Gap.dividerH,
+            Divider(height: 1, color: dividerColor),
             const FootBar(),
           ],
         ),

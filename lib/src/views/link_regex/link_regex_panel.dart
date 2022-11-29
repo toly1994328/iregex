@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:regexp/src/app/iconfont/toly_icon.dart';
+import 'package:regexp/src/app/res/gap.dart';
 import '../../components/custom/empty_panel.dart';
 import '../../components/custom/error_panel.dart';
 import '../../components/custom/loading_panel.dart';
@@ -19,6 +20,7 @@ class LinkRegexPanel extends StatelessWidget {
     return Column(
       children: [
         const LinkRegexTopBar(),
+        Gap.dividerH,
         Expanded(
           child: BlocBuilder<LinkRegexBloc, LinkRegexState>(
             builder: (_, state) => _buildByState(state),

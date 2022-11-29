@@ -113,6 +113,8 @@ class ToolPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color? color = Theme.of(context).backgroundColor;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -120,7 +122,7 @@ class ToolPanel extends StatelessWidget {
           height: 25,
           padding: const EdgeInsets.only(left: 8, right: 4),
           alignment: Alignment.centerLeft,
-          color: const Color(0xffF3F3F3),
+          color: color,
           child: Row(
             children: const [
               Text(

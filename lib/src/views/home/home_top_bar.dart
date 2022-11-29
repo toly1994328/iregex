@@ -23,9 +23,10 @@ class HomeTopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color color = Theme.of(context).backgroundColor;
     return Container(
       height: 50,
-      color: const Color(0xffF2F2F2),
+      color: color,
       child: Row(children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8.0),
@@ -83,6 +84,8 @@ class _RegexInputState extends State<RegexInput> {
 
   @override
   Widget build(BuildContext context) {
+    Color? color = Theme.of(context).inputDecorationTheme.fillColor;
+
     return BlocListener<LinkRegexBloc,LinkRegexState>(
       listener: _listenLinkRegexChange,
       child: SizedBox(
@@ -92,18 +95,18 @@ class _RegexInputState extends State<RegexInput> {
           onChanged: widget.onRegexChange,
           style: const TextStyle(fontSize: 12),
           maxLines: 1,
-          decoration: const InputDecoration(
+          decoration:  InputDecoration(
               filled: true,
               hoverColor: Colors.transparent,
               contentPadding: EdgeInsets.zero,
-              fillColor: Colors.white,
-              prefixIcon: Icon(Icons.edit, size: 18),
-              border: UnderlineInputBorder(
+              fillColor: color,
+              prefixIcon: const Icon(Icons.edit, size: 18),
+              border: const UnderlineInputBorder(
                 borderSide: BorderSide.none,
                 borderRadius: BorderRadius.all(Radius.circular(15)),
               ),
               hintText: "输入正则表达式...",
-              hintStyle: TextStyle(fontSize: 12)),
+              hintStyle: const TextStyle(fontSize: 12)),
         ),
       ),
     );
