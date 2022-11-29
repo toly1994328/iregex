@@ -5,3 +5,4 @@ export 'match/event.dart';
 export 'match/state.dart';
 export 'record/record_bloc.dart';
 export 'record/record_state.dart';
+export 'app_config/bloc.dart';

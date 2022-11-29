@@ -4,10 +4,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:regexp/src/app/iconfont/toly_icon.dart';
-import '../../components/logo.dart';
-import '../../models/link_regex/link_regex.dart';
 import 'package:regexp/src/blocs/blocs.dart';
 
+import '../../components/logo.dart';
+import '../../models/link_regex/link_regex.dart';
 
 class HomeTopBar extends StatelessWidget {
   final ValueChanged<String> onRegexChange;
@@ -29,12 +29,14 @@ class HomeTopBar extends StatelessWidget {
       color: color,
       child: Row(children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8.0),
+          padding:
+              const EdgeInsets.only(left: 20, top: 8.0, bottom: 8, right: 10),
           child: GestureDetector(
             onTap: onSelect,
             child: const Icon(TolyIcon.icon_file, size: 22),
           ),
         ),
+        ThemeSwitchButton(),
         Expanded(
             child: RegexInput(
           onRegexChange: onRegexChange,
@@ -67,13 +69,33 @@ class HomeTopBar extends StatelessWidget {
       }
     }
   }
+}
 
+class ThemeSwitchButton extends StatelessWidget {
+  const ThemeSwitchButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    ThemeMode mode = context.select<AppConfigBloc,ThemeMode>((value) => value.state.themeMode);
+    Widget icon= mode == ThemeMode.dark?
+    const Icon(TolyIcon.wb_sunny, size: 22):
+    const Icon(TolyIcon.dark, size: 22);
+    return Padding(
+      padding: const EdgeInsets.only(left: 10, right: 20, top: 8.0, bottom: 8),
+      child: GestureDetector(
+        onTap: () {
+          context.read<AppConfigBloc>().switchThemeMode();
+        },
+        child: icon,
+      ),
+    );
+  } //AppConfigBloc
 }
 
 class RegexInput extends StatefulWidget {
   final ValueChanged<String> onRegexChange;
 
-  const RegexInput({super.key,required this.onRegexChange});
+  const RegexInput({super.key, required this.onRegexChange});
 
   @override
   State<RegexInput> createState() => _RegexInputState();
