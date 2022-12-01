@@ -1,12 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../app/res/cons.dart';
 import '../../app/res/gap.dart';
 import '../../components/navigation/model/nav_tab.dart';
 import '../../components/navigation/views/left_tab_navigation.dart';
+import '../record/record_cache_bar.dart';
 import 'content_text_panel.dart';
 import 'home_foot.dart';
 import 'home_top_bar.dart';
@@ -14,7 +16,7 @@ import 'left_nav_content.dart';
 import 'package:regexp/src/models/models.dart';
 import 'package:regexp/src/blocs/blocs.dart';
 import 'right_nav_content.dart';
-
+import 'package:path/path.dart' as path;
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -45,57 +47,52 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Brightness brightness = Theme.of(context).brightness;
-    bool isDark = brightness ==Brightness.dark;
-    Color dividerColor = isDark ? Color(0xff323232) : Color(0xffD1D1D1);
-    // Color bgColor = isDark?Colors.redAccent:Colors.white;
-    return BlocListener<RecordBloc, RecordState>(
-      listenWhen: (p, n) => p.activeRecord?.id != n.activeRecord?.id,
-      listener: _listenRecordState,
-      child: Scaffold(
-        // backgroundColor: bgColor,
-        body: Column(
-          children: [
-            HomeTopBar(
-              onSaveLinkRegx: _onSaveLinkRegex,
-              onRegexChange: _onRegexChange,
-              onFileSelect: _onFileSelect,
+    return Scaffold(
+      body: Column(
+        children: [
+          HomeTopBar(
+            onRegexChange: _onRegexChange,
+            onFileSelect: _onFileSelect,
+          ),
+          Gap.dividerH,
+          Expanded(
+            child: Row(
+              children: [
+                RailTabNavigation(
+                  width: 22,
+                  activeId: activeLeftNavId,
+                  onSelect: _onSelectNav,
+                  items: leftTabs,
+                ),
+                LeftNavContent(
+                  controller: _leftCtrl,
+                  activeIndex: activeLeftNavId,
+                ),
+                 Expanded(
+                  child: Column(
+                    children: const [
+                      RecordCacheBar(),
+                      Expanded(child: ContentTextPanel()),
+                    ],
+                  ),
+                ),
+                RightNavContent(
+                  controller: _rightCtrl,
+                  activeIndex: activeRightNavId,
+                ),
+                RailTabNavigation(
+                  width: 22,
+                  textDirection: TextDirection.rtl,
+                  activeId: activeRightNavId,
+                  onSelect: _onSelectNav,
+                  items: rightTabs,
+                ),
+              ],
             ),
-            Divider(height: 1, color: dividerColor),
-            Expanded(
-              child: Row(
-                children: [
-                  RailTabNavigation(
-                    width: 22,
-                    activeId: activeLeftNavId,
-                    onSelect: _onSelectNav,
-                    items: leftTabs,
-                  ),
-                  LeftNavContent(
-                    controller: _leftCtrl,
-                    activeIndex: activeLeftNavId,
-                  ),
-                  const Expanded(
-                    child: ContentTextPanel(),
-                  ),
-                  RightNavContent(
-                    controller: _rightCtrl,
-                    activeIndex: activeRightNavId,
-                  ),
-                  RailTabNavigation(
-                    width: 22,
-                    textDirection: TextDirection.rtl,
-                    activeId: activeRightNavId,
-                    onSelect: _onSelectNav,
-                    items: rightTabs,
-                  ),
-                ],
-              ),
-            ),
-            Divider(height: 1, color: dividerColor),
-            const FootBar(),
-          ],
-        ),
+          ),
+          Gap.dividerH,
+          const FootBar(),
+        ],
       ),
     );
   }
@@ -121,40 +118,21 @@ class _HomePageState extends State<HomePage> {
     setState(() {});
   }
 
-  void _onFileSelect(File file) {
+  void _onFileSelect(File file) async{
     String content = file.readAsStringSync();
-    context.read<MatchBloc>().add(ChangeContent(content: content));
+    if(content.length>1000){
+      content = content.substring(0,1000);
+    }
+    print("content.length:${content.length}");
+    RecordBloc bloc = context.read<RecordBloc>();
+    await bloc.repository.insert(Record.i(
+      title: path.basenameWithoutExtension(file.path),
+      content: content,
+    ));
+    bloc.loadRecord(operation: LoadType.add);
   }
 
   void _onRegexChange(String value) {
     context.read<MatchBloc>().add(ChangeRegex(pattern: value));
-  }
-
-  void _listenRecordState(BuildContext context, RecordState state) {
-    print("=======_listenRecordState=${state.runtimeType}===========");
-    LinkRegexBloc linkRegexBloc = context.read<LinkRegexBloc>();
-    MatchBloc matchBloc = context.read<MatchBloc>();
-    if (state is LoadedRecordState) {
-      linkRegexBloc.loadLinkRegex(recordId: state.activeRecordId);
-      String content = state.activeRecord.content;
-      matchBloc.add(ChangeContent(content: content));
-    }
-    if (state is EmptyRecordState) {
-      linkRegexBloc.loadLinkRegex(recordId: -1);
-      matchBloc.add(const ChangeContent(content: ""));
-    }
-  }
-
-  void _onSaveLinkRegex() async {
-    String regex = context.read<MatchBloc>().state.pattern;
-    Record? record = context.read<RecordBloc>().state.activeRecord;
-    LinkRegexBloc linkRegexBloc = context.read<LinkRegexBloc>();
-    if (record != null) {
-      await linkRegexBloc.repository.insert(LinkRegex.i(
-        recordId: record.id,
-        regex: regex,
-      ));
-      linkRegexBloc.loadLinkRegex(recordId: record.id);
-    }
   }
 }

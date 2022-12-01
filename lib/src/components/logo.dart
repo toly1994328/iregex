@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'feedback_widget.dart';
+
 class Logo extends StatelessWidget {
   const Logo({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: (){},
+    return FeedbackWidget(
+      onPressed: (){
+
+      },
       child: const DecoratedBox(
         decoration: BoxDecoration(
             color: Colors.white,

@@ -16,6 +16,8 @@ class CustomIconInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color? backgroundColor = Theme.of(context).inputDecorationTheme.fillColor;
+
     return SizedBox(
       height: 30,
       child: TextField(
@@ -27,7 +29,7 @@ class CustomIconInput extends StatelessWidget {
             filled: true,
             hoverColor: Colors.transparent,
             contentPadding: const EdgeInsets.only(top: 2),
-            fillColor: Colors.white,
+            fillColor: backgroundColor,
             prefixIcon:  Icon(icon, size: 18),
             border: const UnderlineInputBorder(
               borderSide: BorderSide.none,

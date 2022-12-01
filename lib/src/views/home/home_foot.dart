@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,7 +12,17 @@ class FootBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color? color = Theme.of(context).backgroundColor;
-
+    if(Platform.isAndroid||Platform.isIOS){
+      return Container(
+        height: 24,
+        alignment: Alignment.center,
+        width: double.maxFinite,
+        color: color,
+        child: RegexConfigTools(
+          fontSize: 13,
+        ),
+      );
+    }
     return Container(
       height: 20,
       padding: EdgeInsets.symmetric(horizontal: 20),
@@ -70,8 +82,10 @@ class ResultShower extends StatelessWidget {
 }
 
 class RegexConfigTools extends StatelessWidget {
+  final double fontSize;
   const RegexConfigTools({
     Key? key,
+    this.fontSize = 11
   }) : super(key: key);
 
   final List<String> configInfo = const [
@@ -83,18 +97,17 @@ class RegexConfigTools extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("=======build========");
     Color color = Theme.of(context).primaryColor;
     RegExpConfig config = context.select<MatchBloc, RegExpConfig>(
       (value) => value.state.config,
     );
     TextStyle style = TextStyle(
-      fontSize: 11,
+      fontSize: fontSize,
       color: Colors.grey.withOpacity(0.8),
       height: 1,
     );
     TextStyle activeStyle = TextStyle(
-      fontSize: 11,
+      fontSize: fontSize,
       color: color,
       height: 1,
     );

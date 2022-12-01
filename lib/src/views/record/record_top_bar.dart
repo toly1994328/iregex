@@ -69,8 +69,8 @@ class RecordTopBar extends StatelessWidget {
         builder: (_) => Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: MediaQuery.of(context).size.width / 5),
-              child: const Dialog(
-                backgroundColor: Color(0xffF2F2F2),
+              child:  Dialog(
+                // backgroundColor: Colors.red,
                 child: EditRecordPanel(),
               ),
             ));
@@ -78,6 +78,8 @@ class RecordTopBar extends StatelessWidget {
 
   void showEditeDialog(BuildContext context) {
     RecordBloc bloc = context.read<RecordBloc>();
+    Color color = Theme.of(context).backgroundColor;
+
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -85,13 +87,15 @@ class RecordTopBar extends StatelessWidget {
           padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width / 5),
           child:  Dialog(
-            backgroundColor: const Color(0xffF2F2F2),
+            backgroundColor: color,
             child: EditRecordPanel(model: bloc.state.activeRecord,),
           ),
         ));
   }
 
   void showDeleteDialog(BuildContext context) {
+    Color color = Theme.of(context).backgroundColor;
+
     RecordBloc bloc = context.read<RecordBloc>();
     Record? record = bloc.state.activeRecord;
     if(record == null) return;
@@ -101,7 +105,7 @@ class RecordTopBar extends StatelessWidget {
           padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width / 4),
           child:  Dialog(
-            backgroundColor: const Color(0xffF2F2F2),
+            backgroundColor: color,
             child: DeleteRecordPanel(model: record,),
           ),
         ));

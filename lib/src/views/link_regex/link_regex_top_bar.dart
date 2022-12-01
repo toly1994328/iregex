@@ -15,7 +15,7 @@ class LinkRegexTopBar extends StatelessWidget {
   Widget build(BuildContext context) {
     Color? color = Theme.of(context).backgroundColor;
     return Container(
-      height: 25,
+      height: 26,
       padding: const EdgeInsets.only(left: 8, right: 4),
       alignment: Alignment.centerLeft,
       color: color,
@@ -58,35 +58,41 @@ class LinkRegexTopBar extends StatelessWidget {
   }
 
   void showAddDialog(BuildContext context) {
+    Color color = Theme.of(context).backgroundColor;
+
     showDialog(
         context: context,
         barrierDismissible: false,
         builder: (_) => Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: MediaQuery.of(context).size.width / 5),
-              child: const Dialog(
-                backgroundColor: Color(0xffF2F2F2),
-                child: EditRegexPanel(),
+              child:  Dialog(
+                backgroundColor: color,
+                child:const EditRegexPanel(),
               ),
             ));
   }
 
   void showEditeDialog(BuildContext context) {
-    // RecordBloc bloc = context.read<RecordBloc>();
-    // showDialog(
-    //     context: context,
-    //     barrierDismissible: false,
-    //     builder: (_) => Padding(
-    //       padding: EdgeInsets.symmetric(
-    //           horizontal: MediaQuery.of(context).size.width / 5),
-    //       child:  Dialog(
-    //         backgroundColor: const Color(0xffF2F2F2),
-    //         child: EditRecordPanel(model: bloc.state.activeRecord,),
-    //       ),
-    //     ));
+    Color color = Theme.of(context).backgroundColor;
+
+    LinkRegexBloc bloc = context.read<LinkRegexBloc>();
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width / 5),
+          child:  Dialog(
+            backgroundColor: color,
+            child: EditRegexPanel(model: bloc.state.activeRegex,),
+          ),
+        ));
   }
 
   void showDeleteDialog(BuildContext context) {
+    Color color = Theme.of(context).backgroundColor;
+
     LinkRegexBloc bloc = context.read<LinkRegexBloc>();
     LinkRegex? record = bloc.state.activeRegex;
     if(record == null) return;
@@ -96,7 +102,7 @@ class LinkRegexTopBar extends StatelessWidget {
           padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width / 4),
           child:  Dialog(
-            backgroundColor: const Color(0xffF2F2F2),
+            backgroundColor: color,
             child: DeleteRegexPanel(model: record,),
           ),
         ));

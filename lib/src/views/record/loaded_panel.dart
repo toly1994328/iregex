@@ -56,6 +56,7 @@ class _LoadedPanelState extends State<LoadedPanel> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      padding: EdgeInsets.zero,
       controller: _scrollCtrl,
       itemCount: widget.state.records.length,
       itemExtent: 70,

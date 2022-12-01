@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:equatable/equatable.dart';
 import 'package:regexp/src/models/models.dart';
 
@@ -13,14 +15,24 @@ abstract class RecordState extends Equatable {
     return null;
   }
 
+  List<Record> get cacheRecord{
+    RecordState state = this;
+    if (state is LoadedRecordState) {
+      return state.cacheTabs;
+    }
+    return [];
+  }
+
   RecordState copyWith({
     List<Record>? records,
+    List<Record>? cacheTabs,
     int? activeRecordId,
   }) {
     RecordState state = this;
     if (state is LoadedRecordState) {
       return LoadedRecordState(
         records: records ?? state.records,
+        cacheTabs: cacheTabs ?? state.cacheTabs,
         activeRecordId: activeRecordId ?? state.activeRecordId,
       );
     } else {
@@ -43,10 +55,12 @@ class ErrorRecordState extends RecordState {
 
 class LoadedRecordState extends RecordState {
   final List<Record> records;
+  final List<Record> cacheTabs;
   final int activeRecordId;
 
   const LoadedRecordState({
     required this.records,
+    required this.cacheTabs,
     required this.activeRecordId,
   });
 
@@ -62,8 +76,18 @@ class LoadedRecordState extends RecordState {
     return targetIndex + 1;
   }
 
+  int get nextCacheIndex {
+    int targetIndex = cacheTabs.indexOf(activeRecord);
+    if(targetIndex==cacheTabs.length-1){
+      // 说明是最后一个，取前一个为激活索引
+      return targetIndex - 1;
+    }
+    // 说明在中间，取下一个元素索引
+    return targetIndex + 1;
+  }
+
   @override
-  List<Object?> get props => [activeRecordId, records];
+  List<Object?> get props => [activeRecordId, records, cacheTabs];
 }
 
 class EmptyRecordState extends RecordState {

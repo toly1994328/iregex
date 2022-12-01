@@ -83,7 +83,7 @@ class RegexConfigTools extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("=======build========");
+    // print("=======RegexConfigTools#build========");
     Color color = Theme.of(context).primaryColor;
     RegExpConfig config = context.select<MatchBloc, RegExpConfig>(
       (value) => value.state.config,

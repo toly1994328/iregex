@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,21 +29,23 @@ class _RecordPanelState extends State<RecordPanel> with AutomaticKeepAliveClient
   @override
   void initState() {
     super.initState();
-    bloc.loadRecord();
+    // bloc.loadRecord();
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    Widget content = BlocBuilder<RecordBloc,RecordState>(
+      builder: (_,state)=> _buildByState(state),
+    );
+    if(Platform.isAndroid||Platform.isIOS){
+      return content;
+    }
     return Column(
       children: [
         const RecordTopBar(),
         Gap.dividerH,
-        Expanded(
-          child: BlocBuilder<RecordBloc,RecordState>(
-            builder: (_,state)=> _buildByState(state),
-          )
-        )
+        Expanded(child: content)
       ],
     );
   }

@@ -5,19 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:regexp/src/app/iconfont/toly_icon.dart';
 import 'package:regexp/src/blocs/blocs.dart';
+import 'package:regexp/src/components/feedback_widget.dart';
 
+import 'package:regexp/src/models/models.dart';
 import '../../components/logo.dart';
 import '../../models/link_regex/link_regex.dart';
 
 class HomeTopBar extends StatelessWidget {
   final ValueChanged<String> onRegexChange;
   final ValueChanged<File> onFileSelect;
-  final VoidCallback onSaveLinkRegx;
 
   const HomeTopBar({
     Key? key,
     required this.onRegexChange,
-    required this.onSaveLinkRegx,
     required this.onFileSelect,
   }) : super(key: key);
 
@@ -31,27 +31,17 @@ class HomeTopBar extends StatelessWidget {
         Padding(
           padding:
               const EdgeInsets.only(left: 20, top: 8.0, bottom: 8, right: 10),
-          child: GestureDetector(
-            onTap: onSelect,
+          child: FeedbackWidget(
+            onPressed: onSelect,
             child: const Icon(TolyIcon.icon_file, size: 22),
           ),
         ),
-        ThemeSwitchButton(),
+        const ThemeSwitchButton(),
         Expanded(
             child: RegexInput(
           onRegexChange: onRegexChange,
         )),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8.0),
-          child: GestureDetector(
-            onTap: onSaveLinkRegx,
-            child: const Icon(
-              TolyIcon.save,
-              size: 24,
-              color: Color(0xff59A869),
-            ),
-          ),
-        ),
+        const SaveRegexButton(),
         const Padding(
           padding: EdgeInsets.only(right: 20, left: 10),
           child: Logo(),
@@ -71,25 +61,64 @@ class HomeTopBar extends StatelessWidget {
   }
 }
 
+class SaveRegexButton extends StatelessWidget {
+  const SaveRegexButton({super.key});
+  @override
+  Widget build(BuildContext context) {
+    bool emptyRegex = context.select<MatchBloc, bool>(
+          (value) => value.state.pattern.isEmpty,
+    );
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8.0),
+      child: GestureDetector(
+        onTap: emptyRegex?null:()=>_onSaveLinkRegex(context),
+        child:   Icon(
+          TolyIcon.save,
+          size: 24,
+          color: emptyRegex?Colors.grey: const Color(0xff59A869),
+        ),
+      ),
+    );
+  }
+
+  void _onSaveLinkRegex(BuildContext context) async{
+    String regex = context.read<MatchBloc>().state.pattern;
+    Record? record = context.read<RecordBloc>().state.activeRecord;
+    LinkRegexBloc linkRegexBloc = context.read<LinkRegexBloc>();
+    if (record != null) {
+      await linkRegexBloc.repository.insert(LinkRegex.i(
+        recordId: record.id,
+        regex: regex,
+      ));
+      linkRegexBloc.loadLinkRegex(recordId: record.id);
+    }
+  }
+}
+
+
 class ThemeSwitchButton extends StatelessWidget {
   const ThemeSwitchButton({super.key});
 
   @override
   Widget build(BuildContext context) {
-    ThemeMode mode = context.select<AppConfigBloc,ThemeMode>((value) => value.state.themeMode);
-    Widget icon= mode == ThemeMode.dark?
-    const Icon(TolyIcon.wb_sunny, size: 22):
-    const Icon(TolyIcon.dark, size: 22);
+    ThemeMode mode = context.select<AppConfigBloc, ThemeMode>(
+      (value) => value.state.themeMode,
+    );
+    Widget icon = mode == ThemeMode.dark
+        ? const Icon(TolyIcon.wb_sunny, size: 22)
+        : const Icon(TolyIcon.dark, size: 22);
     return Padding(
       padding: const EdgeInsets.only(left: 10, right: 20, top: 8.0, bottom: 8),
       child: GestureDetector(
-        onTap: () {
-          context.read<AppConfigBloc>().switchThemeMode();
-        },
+        onTap: () => _switchTheme(context),
         child: icon,
       ),
     );
-  } //AppConfigBloc
+  }
+
+  void _switchTheme(BuildContext context) {
+    context.read<AppConfigBloc>().switchThemeMode();
+  }
 }
 
 class RegexInput extends StatefulWidget {
@@ -105,10 +134,16 @@ class _RegexInputState extends State<RegexInput> {
   final TextEditingController _ctrl = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    LinkRegexState regex = context.read<LinkRegexBloc>().state;
+    _listenLinkRegexChange(context, regex);
+  }
+
+  @override
   Widget build(BuildContext context) {
     Color? color = Theme.of(context).inputDecorationTheme.fillColor;
-
-    return BlocListener<LinkRegexBloc,LinkRegexState>(
+    return BlocListener<LinkRegexBloc, LinkRegexState>(
       listener: _listenLinkRegexChange,
       child: SizedBox(
         height: 28,
@@ -117,7 +152,7 @@ class _RegexInputState extends State<RegexInput> {
           onChanged: widget.onRegexChange,
           style: const TextStyle(fontSize: 12),
           maxLines: 1,
-          decoration:  InputDecoration(
+          decoration: InputDecoration(
               filled: true,
               hoverColor: Colors.transparent,
               contentPadding: EdgeInsets.zero,
@@ -144,7 +179,6 @@ class _RegexInputState extends State<RegexInput> {
           _ctrl.text = regex.regex;
         }
       }
-      widget.onRegexChange(_ctrl.text);
     }
   }
 

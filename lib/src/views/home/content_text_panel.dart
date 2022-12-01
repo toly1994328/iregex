@@ -1,28 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:regexp/src/views/home/home_foot.dart';
 import 'package:regexp/src/app/iconfont/toly_icon.dart';
+import 'package:regexp/src/app/res/gap.dart';
 
 import '../../repository/impl/db/helper/default_data.dart';
 import 'package:regexp/src/blocs/blocs.dart';
+
+import '../record/record_cache_bar.dart';
 
 class ContentTextPanel extends StatelessWidget {
   const ContentTextPanel({super.key});
   @override
   Widget build(BuildContext context) {
 
-    return Align(
-      alignment: Alignment.topLeft,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-        child: BlocBuilder<MatchBloc, MatchState>(
-          builder: (_, state) {
-            if(state.content.isEmpty){
-              return const EmptyContent();
-            }
-            return Text.rich(state.inlineSpan,style:   Theme.of(context).textTheme.displayMedium,);
-          },
+    return Column(
+      children: [
+        Expanded(
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: BlocBuilder<MatchBloc, MatchState>(
+              builder: (_, state) {
+                if(state.content.isEmpty){
+                  return const EmptyContent();
+                }
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                  child: Text.rich(state.inlineSpan,style: Theme.of(context).textTheme.displayMedium,),
+                );
+              },
+            ),
+          ),
         ),
-      ),
+        FootBar()
+      ],
     );
   }
 }
@@ -69,7 +80,8 @@ class EmptyContent extends StatelessWidget {
                 color: Color(
                   0xff6E6E6E,
                 )),
-          )
+          ),
+          const SizedBox(height: 10,)
         ],
       ),
     );

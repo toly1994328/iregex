@@ -35,8 +35,7 @@ class _EditRegexPanelState extends State<EditRegexPanel> {
   @override
   void initState() {
     super.initState();
-    // contentCtrl.text = widget.model?.content ?? '';
-    // titleCtrl.text = widget.model?.title ?? '';
+    contentCtrl.text = widget.model?.regex ?? '';
   }
 
   @override
@@ -54,14 +53,6 @@ class _EditRegexPanelState extends State<EditRegexPanel> {
           conformText: "确定",
           onConform: _onConform,
         ),
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(horizontal: 15),
-        //   child: CustomIconInput(
-        //     controller: titleCtrl,
-        //     hintText: "输入记录名称...",
-        //     icon: Icons.drive_file_rename_outline,
-        //   ),
-        // ),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
@@ -90,13 +81,9 @@ class _EditRegexPanelState extends State<EditRegexPanel> {
 
     } else {
       // 说明是修改
-      // operation = LoadType.edit;
-      // result = await bloc.repository.update(
-      //   widget.model!.copyWith(
-      //     title: titleCtrl.text,
-      //     content: contentCtrl.text,
-      //   ),
-      // );
+      result = await bloc.repository.update(widget.model!.copyWith(
+        regex: contentCtrl.text,
+      ),);
     }
     if (result > 0) {
       bloc.loadLinkRegex(recordId: record.id);

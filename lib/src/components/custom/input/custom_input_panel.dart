@@ -25,9 +25,11 @@ class CustomInputPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const Color backgroundColor = Colors.white;
+    Color? backgroundColor = Theme.of(context).inputDecorationTheme.fillColor;
+
+    // const Color backgroundColor = Colors.white;
     InputBorder border = UnderlineInputBorder(
-      borderSide: const BorderSide(color: backgroundColor),
+      borderSide:  BorderSide(color: backgroundColor??Colors.transparent),
       borderRadius: BorderRadius.circular(5),
     );
     return TextField(
@@ -40,14 +42,14 @@ class CustomInputPanel extends StatelessWidget {
         fontSize: fontSize,
         color: color,
         height: 1.2,
-        backgroundColor: Colors.white,
+        // backgroundColor: Colors.white,
       ),
       decoration: InputDecoration(
         filled: true,
         hoverColor: Colors.transparent,
         fillColor: backgroundColor,
         hintText: hintText,
-        hintStyle: TextStyle(color: Colors.black26, fontSize: fontSize),
+        hintStyle: TextStyle(fontSize: fontSize),
         focusedBorder: border,
         enabledBorder: border,
       ),
