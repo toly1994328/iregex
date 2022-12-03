@@ -1,26 +1,37 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:path/path.dart' as path;
 import 'package:regexp/src/blocs/blocs.dart';
+import 'package:regexp/src/views/home/content_text_panel.dart';
+import 'package:regexp/src/views/home/home_foot.dart';
 
 import '../../models/models.dart';
 import '../link_regex/link_regex_tab.dart';
 import '../record/record_panel.dart';
+import 'home_pop_icon.dart';
+import 'phone_regex_input.dart';
 import 'pure_bottom_bar.dart';
-import 'standard_search_bar.dart';
-import 'package:regexp/src/views/home/content_text_panel.dart';
+
 class PhoneHomePage extends StatelessWidget {
   const PhoneHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: PureBottomBar(),
-      appBar: PhoneHomeTopBar(),
-      drawer: RecordDrawer(),
+      bottomNavigationBar: const PureBottomBar(),
+      appBar: const PhoneHomeTopBar(),
+      drawer: const RecordDrawer(),
       body: PageView(
         children: [
-          ContentTextPanel()
+          Column(
+            children: [
+              const Expanded(child: ContentTextPanel()),
+              const FootBar(),
+            ],
+          )
         ],
       ),
     );
@@ -32,107 +43,41 @@ class PhoneHomeTopBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color? color = Theme.of(context).backgroundColor;
+
     return AppBar(
-      systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark
-      ),
-      bottom: LinkRegexTab(),
+      bottom: const LinkRegexTab(),
       titleSpacing: 0,
-      backgroundColor: Colors.white,
-      iconTheme: IconThemeData(color: Colors.black),
+      backgroundColor: color,
+      // iconTheme: IconThemeData(color: iconColor),
       elevation: 0,
-      title:PhoneRegexInput() ,
-      actions: [          IconButton(
-          splashRadius: 20,
-          onPressed: (){}, icon: Icon(Icons.more_vert_sharp))],
+      title: const PhoneRegexInput(),
+      actions: [
+        HomePopIcon(
+          onFileSelect: (f) => _onFileSelect(context, f),
+        )
+      ],
     );
   }
 
   @override
   Size get preferredSize {
-    return Size.fromHeight(kToolbarHeight+26);
-  }
-}
-
-
-
-
-class PhoneRegexInput extends StatefulWidget {
-  const PhoneRegexInput({super.key});
-
-  @override
-  State<PhoneRegexInput> createState() => _PhoneRegexInputState();
-}
-
-class _PhoneRegexInputState extends State<PhoneRegexInput> {
-  final TextEditingController _ctrl = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    LinkRegexState regex = context.read<LinkRegexBloc>().state;
-    _listenLinkRegexChange(context, regex);
+    return const Size.fromHeight(kToolbarHeight + 26);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocListener<LinkRegexBloc, LinkRegexState>(
-      listener: _listenLinkRegexChange,
-      child: SizedBox(
-          height: 35,
-          child: Material(
-            color: Colors.transparent,
-            child: TextField(
-              controller: _ctrl,
-              autofocus: false,
-              enabled: true,
-              cursorColor: Colors.blue,
-              maxLines: 1,
-              onChanged: (str) => _doSearch(context, str),
-              onSubmitted: (str) {
-                //提交后,收起键盘
-                FocusScope.of(context).requestFocus(FocusNode());
-              },
-              decoration: const InputDecoration(
-                  filled: true,
-                  fillColor: Color(0xffF3F6F9),
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.grey,
-                  ),
-                  border: UnderlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius:
-                    BorderRadius.all(Radius.circular(35 / 2)),
-                  ),
-                  hintText: "输入正则表达式...",
-                  hintStyle: TextStyle(fontSize: 14)),
-            ),
-          )),
-    );
-  }
-
-  _doSearch(BuildContext context, String str) {}
-
-  void _listenLinkRegexChange(BuildContext context, LinkRegexState state) {
-    if (state is LoadedLinkRegexState) {
-      LinkRegex? regex = state.activeRegex;
-      if (regex != null) {
-        if (regex.id == -1) {
-          _ctrl.text = '';
-        } else {
-          _ctrl.text = regex.regex;
-        }
-      }
+  void _onFileSelect(BuildContext context, File file) async {
+    String content = file.readAsStringSync();
+    if (content.length > 1000) {
+      content = content.substring(0, 1000);
     }
-  }
-
-  @override
-  void dispose() {
-    _ctrl.dispose();
-    super.dispose();
+    RecordBloc bloc = context.read<RecordBloc>();
+    await bloc.repository.insert(Record.i(
+      title: path.basenameWithoutExtension(file.path),
+      content: content,
+    ));
+    bloc.loadRecord(operation: LoadType.add);
   }
 }
+
 
 

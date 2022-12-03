@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AppThemeData{
 
@@ -10,6 +11,13 @@ class AppThemeData{
     highlightColor: const Color(0xff0D293E),
     // scaffold 背景颜色
     scaffoldBackgroundColor: const Color(0xff2B2B2B),
+    appBarTheme: AppBarTheme(
+      iconTheme: IconThemeData(color: Colors.white),
+        systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.light
+        )
+    ),
     // 分割线颜色
     dividerColor: const Color(0xff323232),
     // 主颜色
@@ -50,6 +58,13 @@ class AppThemeData{
     backgroundColor: const Color(0xffF2F2F2),
     highlightColor: Colors.blue.withOpacity(0.1),
     scaffoldBackgroundColor: const Color(0xffFAFAFA),
+    appBarTheme: AppBarTheme(
+        iconTheme: IconThemeData(color: Colors.black),
+      systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark
+      )
+    ),
     dividerColor: const Color(0xffD1D1D1),
     primarySwatch: Colors.blue,
     textTheme: const TextTheme(

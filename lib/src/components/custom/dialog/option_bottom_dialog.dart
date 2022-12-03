@@ -9,20 +9,20 @@ import 'package:flutter/material.dart';
 class AsyncItem {
   final FutureOr Function()? task;
   final String info;
- 
 
   AsyncItem({this.task,required this.info});
 }
 
-class PickPhotoDialog extends StatelessWidget {
+class PickBottomDialog extends StatelessWidget {
   final List<AsyncItem> tasks;
   final String? message;
 
-  const PickPhotoDialog({super.key, required this.tasks,this.message});
+  const PickBottomDialog({super.key, required this.tasks,this.message});
 
   @override
   Widget build(BuildContext context) {
-
+ Color color = Theme.of(context).dialogBackgroundColor;
+ Color? divColor = Theme.of(context).backgroundColor;
     return Material(
       child: Container(
           color: Colors.white,
@@ -37,7 +37,7 @@ class PickPhotoDialog extends StatelessWidget {
                   .map((index) => buildItem(index, context))
                   .toList(),
               Container(
-                color: Color(0xffE5E3E4).withOpacity(0.3),
+                color: divColor,
                 height: 10,
               ),
               buildCancel(context)
@@ -47,6 +47,7 @@ class PickPhotoDialog extends StatelessWidget {
   }
 
   Widget buildCancel(BuildContext context) {
+    Color color = Theme.of(context).dialogBackgroundColor;
     return Material(
       child: InkWell(
         onTap: () {
@@ -55,12 +56,12 @@ class PickPhotoDialog extends StatelessWidget {
         child: Ink(
           width: MediaQuery.of(context).size.width,
           height: 50,
-          color: Colors.white,
-          child: Center(
+          color: color,
+          child: const Center(
               child: Text(
             '取消',
-            style: TextStyle(fontSize: 17,
-                color: Colors.black,
+            style: TextStyle(fontSize: 16,
+                // color: Colors.black,
                 fontWeight: FontWeight.bold),
           )),
         ),
@@ -69,6 +70,9 @@ class PickPhotoDialog extends StatelessWidget {
   }
 
   Widget buildItem(int index, BuildContext context) {
+    Color color = Theme.of(context).dialogBackgroundColor;
+    Color dividerColor = Theme.of(context).dividerColor;
+
     return Material(
       child: InkWell(
           onTap: () async {
@@ -79,16 +83,16 @@ class PickPhotoDialog extends StatelessWidget {
             height: 52,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
-                color: Colors.white,
+                color: color,
                 border: Border(
                     bottom: index != tasks.length - 1
                         ? BorderSide(
-                            color: Colors.grey.withOpacity(0.2), width: 0.5)
+                            color: dividerColor, width: 0.5)
                         : BorderSide.none)),
             child: Center(
               child: Text(
                 tasks[index].info,
-                style: TextStyle(fontSize: 17,color: Colors.black,),
+                style: const TextStyle(fontSize: 16),
               ),
             ),
           )),
@@ -98,7 +102,7 @@ class PickPhotoDialog extends StatelessWidget {
   Widget _buildMessage(BuildContext context,String? message) {
     return Container(
       alignment: Alignment.center,
-      constraints: BoxConstraints(
+      constraints: const BoxConstraints(
         maxHeight: 52
       ),
       width: MediaQuery.of(context).size.width,
@@ -107,7 +111,7 @@ class PickPhotoDialog extends StatelessWidget {
               bottom:
                    BorderSide(
                   color: Colors.grey.withOpacity(0.2), width: 0.5))),
-      child: Text('${message}', style: TextStyle(fontSize: 15,color: Colors.grey)),
+      child: Text('${message}', style: const TextStyle(fontSize: 15,color: Colors.grey)),
 
     );
   }

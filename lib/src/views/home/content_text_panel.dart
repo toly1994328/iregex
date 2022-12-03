@@ -32,7 +32,6 @@ class ContentTextPanel extends StatelessWidget {
             ),
           ),
         ),
-        FootBar()
       ],
     );
   }

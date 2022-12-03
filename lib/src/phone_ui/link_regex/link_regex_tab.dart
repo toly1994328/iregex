@@ -59,7 +59,6 @@ class LinkRegexTab extends StatelessWidget implements PreferredSizeWidget{
             onLongPress:  () => showOpDialog(context, tab),
             child: Container(
               decoration: BoxDecoration(
-                  color: active ? color : null,
                   border: active?Border(
                   bottom: BorderSide(color: primaryColor)
                 ):null
@@ -97,7 +96,7 @@ class LinkRegexTab extends StatelessWidget implements PreferredSizeWidget{
     HapticFeedback.mediumImpact();
     showCupertinoModalPopup(
         context: context,
-        builder: (context) => PickPhotoDialog(
+        builder: (context) => PickBottomDialog(
           tasks: [
             AsyncItem(task: () {}, info: '修改正则'),
             AsyncItem(task: () {},info: '删除正则'),

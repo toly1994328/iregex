@@ -5,9 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:regexp/src/app/style/app_theme_data.dart';
 import 'package:regexp/src/blocs/blocs.dart';
-import 'package:regexp/src/repository/impl/db/local_db.dart';
-import 'package:regexp/src/views/home/home_page.dart';
-
 import 'src/app/views/bloc_relation.dart';
 import 'src/app/views/bloc_wrapper.dart';
 import 'src/views/splash/splash_page.dart';

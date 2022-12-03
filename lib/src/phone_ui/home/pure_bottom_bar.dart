@@ -36,12 +36,13 @@ class _PureBottomBarState extends State<PureBottomBar> {
 
   @override
   Widget build(BuildContext context) {
+    Color color = Theme.of(context).backgroundColor;
 
     return Wrap(
       children: [
         // Divider(height: 1,),
         BottomNavigationBar(
-          backgroundColor: Colors.white,
+          backgroundColor: color,
           onTap: (position) {
             // checkTokenExpires();
             _position = position;
