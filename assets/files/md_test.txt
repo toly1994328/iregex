@@ -1,0 +1,8 @@
+# 标题一
+## 标题二
+### 标题三
+可能说起 [Flutter 绘制](https://juejin.cn/book/6844733827265331214)大家第一反应就是用 `CustomPaint` 组件，自定义 `CustomPainter` 对象来画。Flutter 中所有可以看得到的组件，比 [Text](https://juejin.cn/post/6916297631366905864)、[Image](https://juejin.cn/post/6916297631366905864)、*Switch*、*Slider*等等，追其根源都是 `画出来` 的，但通过查看**源码**可以发现，Flutter 中大多数组件并不是用 `CustomPaint` 组件来画的，其实 `CustomPaint` 组件是对底层绘制的一层**封装**。这个[系列](https://juejin/post/6916297631366905864)便是对 Flutter 绘制的探索，通过`测试`、`调试`、及`源码分析`来给出一些在绘制时`被忽略`或`从未知晓`的东西，而有些要点如果被忽略，就很可能**出现问题**。
+### 标题四
+##### 标题五
+###### 标题六
+content。# 777"
