@@ -1,6 +1,7 @@
 import '../rules/class_name.dart';
 import '../rules/comment.dart';
 import '../rules/key_words.dart';
+import '../rules/line.dart';
 import '../rules/meta.dart';
 import '../rules/num.dart';
 import '../rules/string.dart';
@@ -12,6 +13,7 @@ class DartLanguage extends Language {
 
   @override
   void initRules() {
+
     add(const BlocCommentRule());
     add(const Slash3CommentRule());
     add(const Slash2CommentRule());

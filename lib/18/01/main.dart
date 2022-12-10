@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
 ** contact me by email 1981462002@qq.com
 **/
 
-const String _kCounty = 'China'; # 常量
+const String _kCounty = 'China';
 
 /// 代码高亮测试案例
 class Hello {

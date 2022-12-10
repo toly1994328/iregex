@@ -8,7 +8,7 @@ class TypeRule extends MatchRule  {
   const TypeRule();
   @override
   Pattern get pattern => RegExp(
-      r'\b([A-Z]\w+(?=[ <\(\?])|'
+      r'\b([A-Z]\w+(?=[ <\(\?\.])|'
       r'(int)|(double)|(num)|(float)|(char)'
       r')\b');
 }
