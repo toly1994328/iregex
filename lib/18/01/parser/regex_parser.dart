@@ -32,9 +32,6 @@ class RegexParser {
           Match? match = scanner.lastMatch;
           if (match != null) {
             String value = match.group(0) ?? '';
-            if(rules[i] is LineRule){
-              print("============LineRule======");
-            }
             HighlightMatch heightMatch = HighlightMatch(rules[i], value, match.start, match.end);
             heightMatches.add(heightMatch);
           }
@@ -49,6 +46,12 @@ class RegexParser {
     return TextSpan(children: span);
   }
 
+  final TextStyle lineStyle = const TextStyle(
+    fontSize: 12,
+    color: Colors.grey,
+    // fontWeight: FontWeight.bold,
+  );
+
   List<InlineSpan> _handleHeightMatches(
     List<HighlightMatch> heightMatches,
     String string,
@@ -59,11 +62,7 @@ class RegexParser {
     int cursor = 0;
 
     int slotCursor = 0;
-    final TextStyle lineStyle = const TextStyle(
-      fontSize: 12,
-      color: Colors.grey,
-      // fontWeight: FontWeight.bold,
-    );
+
 
     insertSlotWithBoundary(int start, int end, TextStyle style,{bool showLine = true}) {
       if (slotCursor>=slots.length||slots[slotCursor] > end || !showLine) {
@@ -93,9 +92,7 @@ class RegexParser {
         }
         span.add(WidgetSpan(child: SizedBox(width: 60,child: Padding(
           padding: const EdgeInsets.only(right: 20),
-          child: Text( '${slotCursor}',
-              textAlign: TextAlign.right,
-              style: lineStyle),
+          child: Text( '$slotCursor', textAlign: TextAlign.right, style: lineStyle),
         ),)));
         String matchStr2 = string.substring(slotPosition, currentEndPosition);
         span.add(TextSpan(
