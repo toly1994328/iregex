@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../components/custom/button/async_button.dart';
 import '../../components/custom/dialog/custom_dialog_bar.dart';
 import '../../components/custom/input/custom_input_panel.dart';
 import '../../components/custom/input/custom_label_input.dart';
 import '../../repository/impl/db/model/record.dart';
 import '../record/bloc/record_bloc.dart';
 
-/// create by 张风捷特烈 on 2020-04-23
-/// contact me by email 1981462002@qq.com
-/// 说明:
 
 class EditRecordPanel extends StatefulWidget {
   final Record? model;
@@ -41,13 +39,10 @@ class _EditRecordPanelState extends State<EditRecordPanel> {
 
   @override
   Widget build(BuildContext context) {
+    String title = widget.model == null ? "添加记录" : "修改记录";
     return Column(
       children: <Widget>[
-        CustomDialogBar(
-          title: widget.model == null ? "添加记录" : "修改记录",
-          conformText: "确定",
-          onConform: _onConform,
-        ),
+        _buildDialogBar(title),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: CustomIconInput(
@@ -70,35 +65,22 @@ class _EditRecordPanelState extends State<EditRecordPanel> {
     );
   }
 
-  Future<bool> _onConform() async {
-    if (!checkAllow()) return false;
+  Future<void> _onConform(BuildContext context) async {
+    if (!checkAllow()) return;
     RecordBloc bloc = context.read<RecordBloc>();
-    int result = -1;
-    LoadType operation ;
     if (widget.model == null) {
       // 说明是添加
-      operation = LoadType.add;
-      result = await bloc.repository.insert(Record.i(
-        title: titleCtrl.text,
-        content: contentCtrl.text,
-      ));
-
+      await bloc.insert(titleCtrl.text, contentCtrl.text,);
     } else {
       // 说明是修改
-      operation = LoadType.edit;
-      result = await bloc.repository.update(
+      await bloc.update(
         widget.model!.copyWith(
           title: titleCtrl.text,
           content: contentCtrl.text,
         ),
       );
     }
-    if (result > 0) {
-      bloc.loadRecord(operation: operation);
-    } else {
-      return false;
-    }
-    return true;
+    Navigator.of(context).pop();
   }
 
   bool checkAllow() {
@@ -119,4 +101,36 @@ class _EditRecordPanelState extends State<EditRecordPanel> {
     }
     return msg.isEmpty;
   }
+
+  Widget _buildDialogBar(String title) {
+    ButtonStyle style = ElevatedButton.styleFrom(
+      elevation: 0,
+      padding: EdgeInsets.zero,
+      shape: const StadiumBorder(),
+    );
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(),
+            child: const Padding(
+                padding: EdgeInsets.only(right: 20),
+                child: Icon(Icons.close, size: 20)),
+          ),
+          Text(
+            title,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          AsyncButton(
+            conformText: '确定',
+            task: _onConform,
+            style: style,
+          ),
+        ],
+      ),
+    );
+  }
+
 }

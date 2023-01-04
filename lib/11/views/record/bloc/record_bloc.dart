@@ -84,6 +84,7 @@ class RecordBloc extends Cubit<RecordState> {
       pageSize: pageSize,
     );
     if (newRecords.isNotEmpty) {
+      print("===加载第 ${pageIndex + 1} 页======${pageSize} 条数据========");
       records = List.of(oldState.records)..addAll(newRecords);
     } else {
       records = oldState.records;
@@ -93,7 +94,7 @@ class RecordBloc extends Cubit<RecordState> {
 
   int _handleActiveId(List<Record> records, LoadType operation) {
     RecordState state = this.state;
-    int? activeId = state.activeRecord?.id;
+    int? activeId = state.active?.id;
     switch (operation) {
       case LoadType.load:
       case LoadType.add:
@@ -107,6 +108,54 @@ class RecordBloc extends Cubit<RecordState> {
           return state.records[state.nextActiveId].id;
         }
         return -1;
+    }
+  }
+
+  Future<bool> deleteById(int id) async {
+    int result = 0;
+    try {
+      result = await repository.deleteById(id);
+    } catch (e) {
+      return false;
+    }
+    if (result > 0) {
+      loadRecord(operation: LoadType.delete);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> deleteAll() async {
+    try {
+      await repository.deleteAll();
+    } catch (e) {
+      return false;
+    }
+    loadRecord(operation: LoadType.load,);
+    return true;
+  }
+
+  Future<bool> insert(String title, String content) async {
+    int result = await repository.insert(Record.i(
+      title: title,
+      content: content,
+    ));
+    if (result > 0) {
+      loadRecord(operation: LoadType.add);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> update(Record record) async {
+    int result = await repository.update(record);
+    if (result > 0) {
+      loadRecord(operation: LoadType.refresh);
+      return true;
+    } else {
+      return false;
     }
   }
 
