@@ -3,7 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'db_migration.dart';
 
 class DbUpdater {
-  static const version = 3;
+  static const version = 2;
 
   Future<void> update(Database db, int oldVersion, int newVersion) async {
     print('-------_onUpgrade---oldVersion:$oldVersion--newVersion$newVersion-');

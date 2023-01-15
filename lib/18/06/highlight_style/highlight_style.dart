@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:regexp/17/06/rules/match_rule.dart';
+import '../rules/match_rule.dart';
 
 abstract class HighlightStyle{
 
